@@ -3,2057 +3,1552 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MetaCasa — Il Sistema Operativo per il Real Estate</title>
-    <meta name="description" content="MetaCasa: l'OS agentico che trasforma ogni agenzia immobiliare. Dall'acquisizione alla vendita, tutto automatizzato.">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <title>Metacasa — Team Meeting 2026</title>
+
+    <!-- Fonts: Montserrat (brand headings) + Inter (brand body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
     <style>
+        /* ===========================================
+           CSS CUSTOM PROPERTIES — METACASA BRAND
+           =========================================== */
         :root {
-            --bg-primary: #0a0a0f;
-            --bg-secondary: #12121a;
-            --bg-card: #1a1a2e;
-            --bg-card-hover: #222240;
-            --accent: #ff6b2b;
-            --accent-light: #ff8f5e;
-            --accent-glow: rgba(255, 107, 43, 0.15);
-            --text-primary: #f0f0f5;
-            --text-secondary: #a0a0b8;
-            --text-muted: #6b6b80;
-            --border: #2a2a3e;
-            --success: #22c55e;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --gradient-1: linear-gradient(135deg, #ff6b2b 0%, #ff3d7f 100%);
-            --gradient-2: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 100%);
+            /* Brand Colors */
+            --mc-purple: #7A00DF;
+            --mc-deep-purple: #4F23CC;
+            --mc-orange: #FF6900;
+            --mc-cyan: #06B6D4;
+            --mc-green: #00D084;
+
+            /* Theme Colors */
+            --bg-primary: #0A0A14;
+            --bg-secondary: #111125;
+            --bg-card: rgba(122, 0, 223, 0.08);
+            --bg-card-border: rgba(122, 0, 223, 0.2);
+            --text-primary: #F0EDF5;
+            --text-secondary: rgba(240, 237, 245, 0.6);
+            --text-muted: rgba(240, 237, 245, 0.35);
+            --accent-gradient: linear-gradient(135deg, #7A00DF, #06B6D4);
+            --accent-gradient-warm: linear-gradient(135deg, #7A00DF, #FF6900);
+            --glow-purple: rgba(122, 0, 223, 0.4);
+            --glow-orange: rgba(255, 105, 0, 0.3);
+
+            /* Typography — clamp for viewport fitting */
+            --font-display: 'Montserrat', system-ui, sans-serif;
+            --font-body: 'Inter', system-ui, sans-serif;
+            --title-size: clamp(2rem, 5.5vw, 4.5rem);
+            --h2-size: clamp(1.5rem, 3.5vw, 2.8rem);
+            --h3-size: clamp(1.1rem, 2.2vw, 1.6rem);
+            --body-size: clamp(0.8rem, 1.4vw, 1.1rem);
+            --small-size: clamp(0.65rem, 1vw, 0.85rem);
+            --metric-size: clamp(1.6rem, 4.5vw, 3.2rem);
+
+            /* Spacing */
+            --slide-padding: clamp(1.5rem, 5vw, 5rem);
+            --content-gap: clamp(0.75rem, 2vw, 2rem);
+            --element-gap: clamp(0.3rem, 1vw, 1rem);
+
+            /* Animation */
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+            --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+            --duration: 0.7s;
         }
 
+        /* ===========================================
+           VIEWPORT FITTING — MANDATORY BASE STYLES
+           =========================================== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        html { scroll-behavior: smooth; }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
+        html, body {
+            height: 100%;
             overflow-x: hidden;
         }
 
-        /* Navigation */
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            padding: 1rem 2rem;
-            background: rgba(10, 10, 15, 0.85);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 107, 43, 0.1);
+        html {
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+        }
+
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
+            scroll-snap-align: start;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            position: relative;
         }
 
-        .logo {
-            font-size: 1.4rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-        }
-        .logo span { color: var(--accent); }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-        .nav-links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 500;
-            transition: color 0.2s;
-        }
-        .nav-links a:hover { color: var(--accent); }
-
-        .nav-cta {
-            background: var(--accent);
-            color: white;
-            padding: 0.5rem 1.2rem;
-            border-radius: 8px;
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
-        .nav-cta:hover { background: var(--accent-light); transform: translateY(-1px); }
-
-        /* Sections */
-        section {
-            padding: 6rem 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .section-label {
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 3px;
-            color: var(--accent);
-            margin-bottom: 1rem;
-        }
-
-        .section-title {
-            font-size: clamp(2rem, 4vw, 3.2rem);
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 1.5rem;
-            letter-spacing: -1px;
-        }
-
-        .section-subtitle {
-            font-size: 1.15rem;
-            color: var(--text-secondary);
-            max-width: 700px;
-            line-height: 1.7;
-        }
-
-        /* Hero */
-        .hero {
-            min-height: 100vh;
+        .slide-content {
+            flex: 1;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            align-items: center;
+            max-height: 100%;
+            overflow: hidden;
+            padding: var(--slide-padding);
+        }
+
+        .card, .container, .content-box {
+            max-width: min(90vw, 1100px);
+            max-height: min(80vh, 700px);
+        }
+
+        .feature-list, .bullet-list {
+            gap: clamp(0.4rem, 1vh, 1rem);
+        }
+
+        .feature-list li, .bullet-list li {
+            font-size: var(--body-size);
+            line-height: 1.4;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+            gap: clamp(0.5rem, 1.5vw, 1rem);
+        }
+
+        img, .image-container {
+            max-width: 100%;
+            max-height: min(50vh, 400px);
+            object-fit: contain;
+        }
+
+        /* Short viewports */
+        @media (max-height: 700px) {
+            :root {
+                --slide-padding: clamp(0.75rem, 3vw, 2rem);
+                --content-gap: clamp(0.4rem, 1.5vw, 1rem);
+                --title-size: clamp(1.5rem, 4.5vw, 2.8rem);
+                --h2-size: clamp(1.2rem, 3vw, 2rem);
+                --metric-size: clamp(1.5rem, 5vw, 3.5rem);
+            }
+        }
+
+        @media (max-height: 600px) {
+            :root {
+                --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem);
+                --content-gap: clamp(0.3rem, 1vw, 0.75rem);
+                --title-size: clamp(1.2rem, 4vw, 2rem);
+                --body-size: clamp(0.7rem, 1.2vw, 0.95rem);
+            }
+            .nav-dots, .keyboard-hint, .decorative, .slide-number { display: none; }
+        }
+
+        @media (max-height: 500px) {
+            :root {
+                --slide-padding: clamp(0.4rem, 2vw, 1rem);
+                --title-size: clamp(1rem, 3.5vw, 1.5rem);
+                --h2-size: clamp(0.9rem, 2.5vw, 1.25rem);
+                --body-size: clamp(0.65rem, 1vw, 0.85rem);
+            }
+        }
+
+        @media (max-width: 600px) {
+            :root { --title-size: clamp(1.5rem, 8vw, 2.5rem); }
+            .grid { grid-template-columns: 1fr; }
+            .three-col { grid-template-columns: 1fr !important; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.2s !important;
+            }
+            html { scroll-behavior: auto; }
+        }
+
+        /* ===========================================
+           GLOBAL STYLES
+           =========================================== */
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: var(--body-size);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: var(--font-display);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+
+        h1 { font-size: var(--title-size); }
+        h2 { font-size: var(--h2-size); }
+        h3 { font-size: var(--h3-size); font-weight: 700; }
+
+        p {
+            font-size: var(--body-size);
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        /* ===========================================
+           PROGRESS BAR
+           =========================================== */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: var(--accent-gradient);
+            z-index: 1000;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        /* ===========================================
+           NAVIGATION DOTS
+           =========================================== */
+        .nav-dots {
+            position: fixed;
+            right: clamp(12px, 2vw, 24px);
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 999;
+        }
+
+        .nav-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(122, 0, 223, 0.3);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 0;
+        }
+
+        .nav-dot.active {
+            background: var(--mc-purple);
+            box-shadow: 0 0 12px var(--glow-purple);
+            transform: scale(1.3);
+        }
+
+        .nav-dot:hover {
+            background: rgba(122, 0, 223, 0.6);
+        }
+
+        /* ===========================================
+           SLIDE NUMBER
+           =========================================== */
+        .slide-number {
+            position: absolute;
+            top: clamp(12px, 2vw, 24px);
+            right: clamp(48px, 5vw, 80px);
+            font-family: var(--font-display);
+            font-size: var(--small-size);
+            font-weight: 600;
+            color: var(--text-muted);
+            letter-spacing: 0.1em;
+        }
+
+        /* ===========================================
+           REVEAL ANIMATIONS
+           =========================================== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity var(--duration) var(--ease-out-expo),
+                        transform var(--duration) var(--ease-out-expo);
+        }
+
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-40px);
+            transition: opacity var(--duration) var(--ease-out-expo),
+                        transform var(--duration) var(--ease-out-expo);
+        }
+
+        .reveal-scale {
+            opacity: 0;
+            transform: scale(0.92);
+            transition: opacity var(--duration) var(--ease-out-expo),
+                        transform var(--duration) var(--ease-out-expo);
+        }
+
+        .slide.visible .reveal,
+        .slide.visible .reveal-left,
+        .slide.visible .reveal-scale {
+            opacity: 1;
+            transform: translateY(0) translateX(0) scale(1);
+        }
+
+        .slide.visible .reveal:nth-child(1) { transition-delay: 0.05s; }
+        .slide.visible .reveal:nth-child(2) { transition-delay: 0.15s; }
+        .slide.visible .reveal:nth-child(3) { transition-delay: 0.25s; }
+        .slide.visible .reveal:nth-child(4) { transition-delay: 0.35s; }
+        .slide.visible .reveal:nth-child(5) { transition-delay: 0.45s; }
+        .slide.visible .reveal:nth-child(6) { transition-delay: 0.55s; }
+
+        .slide.visible .reveal-left:nth-child(1) { transition-delay: 0.1s; }
+        .slide.visible .reveal-left:nth-child(2) { transition-delay: 0.2s; }
+        .slide.visible .reveal-left:nth-child(3) { transition-delay: 0.3s; }
+
+        /* ===========================================
+           BACKGROUND EFFECTS
+           =========================================== */
+        .bg-gradient-mesh {
+            background:
+                radial-gradient(ellipse at 15% 85%, rgba(122, 0, 223, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 85% 15%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
+                var(--bg-primary);
+        }
+
+        .bg-gradient-warm {
+            background:
+                radial-gradient(ellipse at 20% 80%, rgba(122, 0, 223, 0.18) 0%, transparent 45%),
+                radial-gradient(ellipse at 80% 30%, rgba(255, 105, 0, 0.1) 0%, transparent 45%),
+                var(--bg-primary);
+        }
+
+        .bg-gradient-deep {
+            background:
+                radial-gradient(ellipse at 50% 50%, rgba(79, 35, 204, 0.2) 0%, transparent 60%),
+                var(--bg-primary);
+        }
+
+        .bg-grid {
+            background-image:
+                linear-gradient(rgba(122, 0, 223, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(122, 0, 223, 0.04) 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
+
+        /* ===========================================
+           COMPONENT STYLES
+           =========================================== */
+
+        /* --- Accent line --- */
+        .accent-line {
+            width: 60px;
+            height: 3px;
+            background: var(--accent-gradient);
+            border-radius: 2px;
+            margin-bottom: var(--content-gap);
+        }
+
+        /* --- Section label --- */
+        .section-label {
+            font-family: var(--font-display);
+            font-size: var(--small-size);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--mc-purple);
+            margin-bottom: var(--element-gap);
+        }
+
+        /* --- Metric cards --- */
+        .metrics-grid {
+            display: grid;
+            gap: clamp(0.75rem, 2vw, 1.5rem);
+        }
+
+        .metrics-grid.four {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .metrics-grid.three {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .metrics-grid.two {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        @media (max-width: 700px) {
+            .metrics-grid.four { grid-template-columns: repeat(2, 1fr); }
+            .metrics-grid.three { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        .metric-card {
+            background: var(--bg-card);
+            border: 1px solid var(--bg-card-border);
+            border-radius: 16px;
+            padding: clamp(1rem, 2.5vw, 2rem);
             text-align: center;
-            padding-top: 5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px rgba(122, 0, 223, 0.15);
+        }
+
+        .metric-value {
+            font-family: var(--font-display);
+            font-size: var(--metric-size);
+            font-weight: 900;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+        }
+
+        .metric-value.orange {
+            background: var(--accent-gradient-warm);
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+
+        .metric-label {
+            font-size: var(--small-size);
+            color: var(--text-secondary);
+            margin-top: clamp(0.25rem, 0.5vw, 0.5rem);
+            font-weight: 500;
+        }
+
+        /* --- Feature cards (3 pillars) --- */
+        .three-col {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: clamp(0.75rem, 2vw, 1.5rem);
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--bg-card-border);
+            border-radius: 16px;
+            padding: clamp(1rem, 2vw, 1.75rem);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--mc-purple);
+        }
+
+        .feature-icon {
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            margin-bottom: clamp(0.5rem, 1vw, 0.75rem);
+        }
+
+        .feature-card h3 {
+            margin-bottom: clamp(0.3rem, 0.7vw, 0.5rem);
+            font-size: clamp(0.9rem, 1.8vw, 1.3rem);
+        }
+
+        .feature-card p {
+            font-size: var(--small-size);
+            line-height: 1.5;
+        }
+
+        /* --- Timeline --- */
+        .timeline {
+            display: flex;
+            align-items: flex-start;
+            gap: clamp(0.5rem, 2vw, 2rem);
+            position: relative;
+            padding-top: clamp(1rem, 2vw, 1.5rem);
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--mc-purple), var(--mc-cyan));
+            opacity: 0.3;
+        }
+
+        .timeline-item {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: calc(-1 * clamp(1rem, 2vw, 1.5rem));
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%);
+            width: 12px;
+            height: 12px;
+            background: var(--mc-purple);
+            border-radius: 50%;
+            box-shadow: 0 0 12px var(--glow-purple);
+        }
+
+        .timeline-item.active::before {
+            background: var(--mc-orange);
+            box-shadow: 0 0 16px var(--glow-orange);
+            width: 14px;
+            height: 14px;
+        }
+
+        .timeline-year {
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: clamp(0.9rem, 1.5vw, 1.2rem);
+            color: var(--mc-purple);
+            margin-bottom: clamp(0.2rem, 0.5vw, 0.4rem);
+        }
+
+        .timeline-item.active .timeline-year {
+            color: var(--mc-orange);
+        }
+
+        .timeline-text {
+            font-size: var(--small-size);
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        /* --- Bullet list styled --- */
+        .styled-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.5rem, 1.2vw, 1rem);
+        }
+
+        .styled-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: clamp(0.5rem, 1vw, 0.75rem);
+            font-size: var(--body-size);
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .styled-list li::before {
+            content: '';
+            flex-shrink: 0;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--mc-purple);
+            margin-top: 0.5em;
+        }
+
+        /* --- Quote block --- */
+        .quote-block {
+            border-left: 3px solid var(--mc-purple);
+            padding-left: clamp(1rem, 2vw, 1.5rem);
+            font-family: var(--font-display);
+            font-size: clamp(1.1rem, 2vw, 1.6rem);
+            font-weight: 600;
+            font-style: italic;
+            color: var(--text-primary);
+            line-height: 1.4;
+        }
+
+        /* --- CTA / highlight box --- */
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(122, 0, 223, 0.15), rgba(79, 35, 204, 0.1));
+            border: 1px solid rgba(122, 0, 223, 0.3);
+            border-radius: 16px;
+            padding: clamp(1rem, 2.5vw, 2rem);
+            text-align: center;
+        }
+
+        .highlight-box h3 {
+            margin-bottom: clamp(0.3rem, 0.7vw, 0.5rem);
+        }
+
+        /* --- Market circles --- */
+        .market-circles {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(1rem, 3vw, 3rem);
+        }
+
+        .market-circle {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: clamp(0.3rem, 0.7vw, 0.5rem);
+        }
+
+        .circle {
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-display);
+            font-weight: 800;
+            color: white;
+        }
+
+        .circle.large {
+            width: clamp(100px, 15vw, 180px);
+            height: clamp(100px, 15vw, 180px);
+            background: rgba(122, 0, 223, 0.2);
+            border: 2px solid rgba(122, 0, 223, 0.4);
+            font-size: clamp(1rem, 2.5vw, 1.8rem);
+        }
+
+        .circle.medium {
+            width: clamp(80px, 12vw, 140px);
+            height: clamp(80px, 12vw, 140px);
+            background: rgba(122, 0, 223, 0.3);
+            border: 2px solid rgba(122, 0, 223, 0.5);
+            font-size: clamp(0.85rem, 2vw, 1.4rem);
+        }
+
+        .circle.small {
+            width: clamp(65px, 10vw, 110px);
+            height: clamp(65px, 10vw, 110px);
+            background: var(--mc-purple);
+            border: 2px solid var(--mc-purple);
+            font-size: clamp(0.8rem, 1.8vw, 1.2rem);
+            box-shadow: 0 0 24px var(--glow-purple);
+        }
+
+        .circle-label {
+            font-size: var(--small-size);
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* --- Roadmap cards --- */
+        .roadmap-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: clamp(0.75rem, 2vw, 1.5rem);
+        }
+
+        @media (max-width: 700px) {
+            .roadmap-grid { grid-template-columns: 1fr; }
+        }
+
+        .roadmap-card {
+            background: var(--bg-card);
+            border: 1px solid var(--bg-card-border);
+            border-radius: 16px;
+            padding: clamp(1rem, 2vw, 1.5rem);
             position: relative;
             overflow: hidden;
         }
 
-        .hero::before {
+        .roadmap-card::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle at 50% 50%, var(--accent-glow) 0%, transparent 50%);
-            animation: pulse 8s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 0.6; transform: scale(1.1); }
-        }
-
-        .hero-content { position: relative; z-index: 1; }
-
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: rgba(255, 107, 43, 0.1);
-            border: 1px solid rgba(255, 107, 43, 0.3);
-            padding: 0.4rem 1rem;
-            border-radius: 100px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--accent);
-            margin-bottom: 2rem;
-        }
-
-        .hero h1 {
-            font-size: clamp(2.5rem, 6vw, 4.5rem);
-            font-weight: 900;
-            line-height: 1.05;
-            letter-spacing: -2px;
-            margin-bottom: 1.5rem;
-            max-width: 900px;
-        }
-
-        .hero h1 .highlight {
-            background: var(--gradient-1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero-stats {
-            display: flex;
-            gap: 3rem;
-            justify-content: center;
-            margin-top: 3rem;
-            flex-wrap: wrap;
-        }
-
-        .hero-stat {
-            text-align: center;
-        }
-
-        .hero-stat .number {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: var(--accent);
-            line-height: 1;
-        }
-
-        .hero-stat .label {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-top: 0.3rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .hero-p {
-            font-size: 1.2rem;
-            color: var(--text-secondary);
-            max-width: 650px;
-            margin: 0 auto;
-            line-height: 1.7;
-        }
-
-        .hero-cta {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-top: 2.5rem;
-            background: var(--accent);
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 1rem;
-            transition: all 0.3s;
-            box-shadow: 0 4px 30px rgba(255, 107, 43, 0.3);
-        }
-        .hero-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 40px rgba(255, 107, 43, 0.4); }
-
-        /* Pain section */
-        .pain-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-top: 3rem;
-        }
-
-        .pain-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 2rem;
-            transition: all 0.3s;
-        }
-        .pain-card:hover { border-color: var(--danger); background: var(--bg-card-hover); }
-
-        .pain-icon {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-        }
-
-        .pain-card h3 {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-
-        .pain-card p {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            line-height: 1.6;
-        }
-
-        .pain-number {
-            font-size: 2rem;
-            font-weight: 800;
-            color: var(--danger);
-            margin-bottom: 0.3rem;
-        }
-
-        /* Solution */
-        .solution-flow {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
-            margin: 3rem 0;
-            flex-wrap: wrap;
-        }
-
-        .flow-step {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 1.5rem 2rem;
-            text-align: center;
-            min-width: 200px;
-            flex: 1;
-        }
-        .flow-step.active {
-            border-color: var(--accent);
-            background: rgba(255, 107, 43, 0.08);
-        }
-
-        .flow-arrow {
-            font-size: 1.5rem;
-            color: var(--accent);
-        }
-
-        .pillars {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
-            margin-top: 3rem;
-        }
-
-        .pillar {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 2rem;
-            text-align: center;
-            transition: all 0.3s;
-        }
-        .pillar:hover { border-color: var(--accent); transform: translateY(-4px); }
-
-        .pillar-icon { font-size: 2.5rem; margin-bottom: 1rem; }
-        .pillar h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--accent); }
-        .pillar p { font-size: 0.85rem; color: var(--text-secondary); }
-
-        /* Workflow Comparison */
-        .workflow-compare {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .workflow-col {
-            border-radius: 20px;
-            padding: 2.5rem;
-            position: relative;
-        }
-
-        .workflow-col.traditional {
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, rgba(239, 68, 68, 0.02) 100%);
-            border: 1px solid rgba(239, 68, 68, 0.2);
-        }
-
-        .workflow-col.metacasa {
-            background: linear-gradient(135deg, rgba(34, 197, 94, 0.08) 0%, rgba(34, 197, 94, 0.02) 100%);
-            border: 1px solid rgba(34, 197, 94, 0.2);
-        }
-
-        .workflow-header {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            margin-bottom: 2rem;
-        }
-
-        .workflow-header .tag {
-            padding: 0.3rem 0.8rem;
-            border-radius: 100px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .traditional .tag { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
-        .metacasa .tag { background: rgba(34, 197, 94, 0.15); color: var(--success); }
-
-        .workflow-header h3 { font-size: 1.3rem; font-weight: 700; }
-
-        .workflow-steps {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .workflow-step {
-            display: flex;
-            align-items: flex-start;
-            gap: 0.8rem;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-
-        .step-num {
-            width: 28px;
-            height: 28px;
-            min-width: 28px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.75rem;
-            font-weight: 700;
-        }
-        .traditional .step-num { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
-        .metacasa .step-num { background: rgba(34, 197, 94, 0.15); color: var(--success); }
-
-        .workflow-bottom {
-            margin-top: 2rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .workflow-metric {
-            text-align: center;
-        }
-
-        .workflow-metric .val {
-            font-size: 1.8rem;
-            font-weight: 800;
-        }
-        .traditional .val { color: var(--danger); }
-        .metacasa .val { color: var(--success); }
-
-        .workflow-metric .desc {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* Capabilities Grid */
-        .cap-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1rem;
-            margin-top: 3rem;
-        }
-
-        .cap-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            display: flex;
-            align-items: flex-start;
-            gap: 1rem;
-            transition: all 0.3s;
-        }
-        .cap-card:hover { border-color: var(--accent); transform: translateY(-2px); }
-
-        .cap-icon {
-            font-size: 1.5rem;
-            min-width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--accent-glow);
-            border-radius: 10px;
-        }
-
-        .cap-card h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.3rem; }
-        .cap-card p { font-size: 0.8rem; color: var(--text-muted); }
-
-        /* BIM Section */
-        .bim-visual {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-            margin-top: 3rem;
-            align-items: center;
-        }
-
-        .bim-flow {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .bim-step {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.2rem 1.5rem;
-            transition: all 0.3s;
-        }
-        .bim-step:hover { border-color: var(--accent); }
-        .bim-step .num {
-            width: 36px;
-            height: 36px;
-            min-width: 36px;
-            border-radius: 50%;
-            background: var(--accent-glow);
-            color: var(--accent);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 0.85rem;
-        }
-
-        .bim-info {
-            background: linear-gradient(135deg, rgba(255, 107, 43, 0.08) 0%, rgba(255, 61, 127, 0.05) 100%);
-            border: 1px solid rgba(255, 107, 43, 0.2);
-            border-radius: 20px;
-            padding: 2.5rem;
-        }
-
-        .bim-info h3 { font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; }
-        .bim-info p { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.7; }
-
-        /* Traction / Numbers */
-        .traction-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1.5rem;
-            margin-top: 3rem;
-        }
-
-        .traction-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 2rem;
-            text-align: center;
-            transition: all 0.3s;
-        }
-        .traction-card:hover { border-color: var(--accent); }
-
-        .traction-number {
-            font-size: 2.8rem;
-            font-weight: 900;
-            background: var(--gradient-1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            line-height: 1;
-        }
-
-        .traction-label {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            margin-top: 0.5rem;
-        }
-
-        .traction-sub {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            margin-top: 0.3rem;
-        }
-
-        /* Competitor Table */
-        .comp-table-wrap {
-            overflow-x: auto;
-            margin-top: 3rem;
-            border-radius: 16px;
-            border: 1px solid var(--border);
-        }
-
-        .comp-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.85rem;
-        }
-
-        .comp-table th {
-            background: var(--bg-card);
-            padding: 1rem;
-            text-align: center;
-            font-weight: 600;
-            border-bottom: 1px solid var(--border);
-            white-space: nowrap;
-        }
-        .comp-table th:first-child { text-align: left; }
-        .comp-table th.mc { color: var(--accent); background: rgba(255, 107, 43, 0.08); }
-
-        .comp-table td {
-            padding: 0.8rem 1rem;
-            text-align: center;
-            border-bottom: 1px solid rgba(42, 42, 62, 0.5);
-            white-space: nowrap;
-        }
-        .comp-table td:first-child { text-align: left; font-weight: 500; }
-        .comp-table td.mc { background: rgba(255, 107, 43, 0.04); }
-
-        .comp-table tr:hover td { background: rgba(255, 255, 255, 0.02); }
-        .comp-table tr:hover td.mc { background: rgba(255, 107, 43, 0.08); }
-
-        .check { color: var(--success); font-weight: 700; }
-        .cross { color: var(--text-muted); }
-        .partial { color: var(--warning); }
-
-        .comp-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .comp-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.5rem;
-        }
-        .comp-card h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.5rem; }
-        .comp-card .tag-small {
-            font-size: 0.65rem;
-            padding: 0.15rem 0.5rem;
-            border-radius: 4px;
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-muted);
-            margin-left: 0.5rem;
-        }
-        .comp-card p { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5; }
-
-        /* Pricing */
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1.5rem;
-            margin-top: 3rem;
-        }
-
-        .price-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 2rem;
-            text-align: center;
-            transition: all 0.3s;
-            position: relative;
-        }
-        .price-card:hover { border-color: var(--accent); transform: translateY(-4px); }
-
-        .price-card.featured {
-            border-color: var(--accent);
-            background: linear-gradient(135deg, rgba(255, 107, 43, 0.1) 0%, var(--bg-card) 100%);
-        }
-
-        .price-card.featured::before {
-            content: 'Best Value';
-            position: absolute;
-            top: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--accent);
-            color: white;
-            padding: 0.2rem 0.8rem;
-            border-radius: 100px;
-            font-size: 0.7rem;
-            font-weight: 700;
-        }
-
-        .price-name { font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; }
-        .price-amount { font-size: 2.5rem; font-weight: 800; margin: 0.5rem 0; }
-        .price-amount span { font-size: 0.9rem; color: var(--text-muted); font-weight: 400; }
-        .price-desc { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem; }
-
-        .price-features {
-            list-style: none;
-            text-align: left;
-        }
-        .price-features li {
-            padding: 0.4rem 0;
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .price-features li::before { content: '✓'; color: var(--accent); font-weight: 700; }
-
-        /* Market Size */
-        .tam-visual {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 3rem;
-            margin-top: 3rem;
-        }
-
-        .tam-circles {
-            position: relative;
-            width: 400px;
-            height: 400px;
-        }
-
-        .tam-circle {
-            position: absolute;
-            border-radius: 50%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .tam-circle.tam {
-            width: 400px;
-            height: 400px;
-            background: rgba(255, 107, 43, 0.05);
-            border: 1px solid rgba(255, 107, 43, 0.15);
             top: 0;
             left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--accent-gradient);
         }
 
-        .tam-circle.sam {
-            width: 260px;
-            height: 260px;
-            background: rgba(255, 107, 43, 0.1);
-            border: 1px solid rgba(255, 107, 43, 0.25);
-            top: 70px;
-            left: 70px;
+        .roadmap-card.current::before {
+            background: var(--mc-orange);
+            height: 4px;
         }
 
-        .tam-circle.som {
-            width: 140px;
-            height: 140px;
-            background: rgba(255, 107, 43, 0.2);
-            border: 2px solid var(--accent);
-            top: 130px;
-            left: 130px;
-        }
-
-        .tam-circle .circle-val {
-            font-size: 1.3rem;
+        .roadmap-card .year {
+            font-family: var(--font-display);
             font-weight: 800;
-            color: var(--accent);
-        }
-        .tam-circle .circle-label {
-            font-size: 0.65rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            font-size: clamp(0.9rem, 1.5vw, 1.2rem);
+            color: var(--mc-purple);
+            margin-bottom: clamp(0.3rem, 0.7vw, 0.5rem);
         }
 
-        .tam-details {
-            max-width: 400px;
+        .roadmap-card.current .year {
+            color: var(--mc-orange);
         }
 
-        .tam-item {
-            padding: 1rem 0;
-            border-bottom: 1px solid var(--border);
-        }
-        .tam-item:last-child { border: none; }
-        .tam-item h4 { font-size: 1rem; font-weight: 600; margin-bottom: 0.3rem; }
-        .tam-item p { font-size: 0.85rem; color: var(--text-secondary); }
-
-        /* Roadmap */
-        .roadmap {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1.5rem;
-            margin-top: 3rem;
-            position: relative;
-        }
-
-        .roadmap::before {
-            content: '';
-            position: absolute;
-            top: 35px;
-            left: 10%;
-            right: 10%;
-            height: 2px;
-            background: linear-gradient(90deg, var(--accent), var(--accent-light));
-        }
-
-        .road-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 2rem 1.5rem;
-            text-align: center;
-            position: relative;
-        }
-
-        .road-year {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: var(--bg-primary);
-            border: 2px solid var(--accent);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: -3.5rem auto 1rem;
-            font-weight: 700;
-            font-size: 0.85rem;
-            color: var(--accent);
-        }
-
-        .road-arr {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--accent);
-            margin-bottom: 0.5rem;
-        }
-
-        .road-card ul {
+        .roadmap-card ul {
             list-style: none;
-            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.2rem, 0.5vw, 0.4rem);
         }
-        .road-card ul li {
-            font-size: 0.8rem;
+
+        .roadmap-card li {
+            font-size: var(--small-size);
             color: var(--text-secondary);
-            padding: 0.3rem 0;
-            padding-left: 1rem;
+            padding-left: 1em;
             position: relative;
         }
-        .road-card ul li::before {
-            content: '→';
+
+        .roadmap-card li::before {
+            content: '>';
             position: absolute;
             left: 0;
-            color: var(--accent);
-        }
-
-        /* Team */
-        .team-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .team-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 2rem;
-            text-align: center;
-            transition: all 0.3s;
-        }
-        .team-card:hover { border-color: var(--accent); }
-
-        .team-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: var(--gradient-1);
-            margin: 0 auto 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            font-weight: 800;
-            color: white;
-        }
-
-        .team-card h3 { font-size: 1.1rem; font-weight: 700; }
-        .team-card .role { font-size: 0.85rem; color: var(--accent); font-weight: 600; margin-bottom: 0.5rem; }
-        .team-card p { font-size: 0.8rem; color: var(--text-secondary); }
-
-        .advisors {
-            display: flex;
-            justify-content: center;
-            gap: 3rem;
-            margin-top: 2rem;
-        }
-
-        .advisor {
-            text-align: center;
-        }
-        .advisor .adv-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 0.5rem;
+            color: var(--mc-purple);
             font-weight: 700;
-            font-size: 0.85rem;
-            color: var(--accent);
-        }
-        .advisor .adv-name { font-size: 0.8rem; font-weight: 600; }
-        .advisor .adv-role { font-size: 0.7rem; color: var(--text-muted); }
-
-        /* Ask / CTA Final */
-        .ask-section {
-            text-align: center;
-            padding: 8rem 2rem;
-            position: relative;
         }
 
-        .ask-section::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at 50% 80%, var(--accent-glow) 0%, transparent 60%);
-        }
-
-        .ask-content { position: relative; z-index: 1; }
-
-        .ask-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1rem;
-            margin: 3rem auto;
-            max-width: 800px;
-        }
-
-        .ask-item {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            text-align: center;
-        }
-        .ask-item .ask-val { font-size: 1.3rem; font-weight: 800; color: var(--accent); }
-        .ask-item .ask-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 0.3rem; }
-
-        .fund-bars {
+        /* --- Slide-specific layouts --- */
+        .centered-content {
             display: flex;
-            gap: 0.5rem;
-            justify-content: center;
-            margin-top: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .fund-bar {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 0.5rem 1rem;
-            font-size: 0.8rem;
-        }
-        .fund-bar .dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-        }
-
-        .final-cta {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-top: 3rem;
-            background: var(--gradient-1);
-            color: white;
-            padding: 1.2rem 3rem;
-            border-radius: 14px;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 1.1rem;
-            transition: all 0.3s;
-            box-shadow: 0 8px 40px rgba(255, 107, 43, 0.3);
-        }
-        .final-cta:hover { transform: translateY(-3px); box-shadow: 0 12px 50px rgba(255, 107, 43, 0.45); }
-
-        /* Dividers */
-        .section-divider {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--border), transparent);
-        }
-
-        /* Unit Economics */
-        .ue-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
-            margin-top: 3rem;
-        }
-
-        .ue-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 2rem;
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-        }
-
-        .ue-val {
-            font-size: 2rem;
-            font-weight: 800;
-            color: var(--accent);
-            min-width: 100px;
-            text-align: center;
-        }
-        .ue-info h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.3rem; }
-        .ue-info p { font-size: 0.8rem; color: var(--text-secondary); }
-
-        /* Automation */
-        .auto-visual {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 3rem;
-            margin-top: 3rem;
-        }
-
-        .auto-ring {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            border: 12px solid var(--border);
-            border-top-color: var(--accent);
-            border-right-color: var(--accent);
-            border-bottom-color: var(--accent);
-            display: flex;
-            align-items: center;
-            justify-content: center;
             flex-direction: column;
+            align-items: center;
+            text-align: center;
         }
-        .auto-ring .ring-val { font-size: 2.5rem; font-weight: 900; color: var(--accent); }
-        .auto-ring .ring-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
 
-        .auto-benefits { max-width: 500px; }
-        .auto-benefit {
-            display: flex;
-            align-items: flex-start;
-            gap: 1rem;
-            padding: 1rem 0;
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: clamp(1.5rem, 4vw, 4rem);
+            align-items: center;
         }
-        .auto-benefit .ab-icon {
-            width: 36px;
-            height: 36px;
-            min-width: 36px;
-            border-radius: 10px;
-            background: var(--accent-glow);
+
+        @media (max-width: 700px) {
+            .two-columns { grid-template-columns: 1fr; }
+        }
+
+        /* ===========================================
+           TITLE SLIDE — COVER
+           =========================================== */
+        .title-slide {
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .title-slide .slide-content {
+            align-items: center;
+        }
+
+        .logo-placeholder {
+            width: clamp(160px, 20vw, 280px);
+            margin-bottom: clamp(1.5rem, 3vw, 3rem);
+        }
+
+        .logo-text {
+            font-family: var(--font-display);
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            font-weight: 900;
+            letter-spacing: 0.05em;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .title-slide h1 {
+            max-width: 15ch;
+            margin-bottom: clamp(0.5rem, 1.5vw, 1rem);
+        }
+
+        .title-date {
+            font-size: var(--small-size);
+            color: var(--text-muted);
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            margin-top: clamp(1rem, 2vw, 2rem);
+        }
+
+        /* ===========================================
+           CLOSING SLIDE
+           =========================================== */
+        .closing-slide .slide-content {
+            align-items: center;
+            text-align: center;
+        }
+
+        .closing-slide h1 {
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ===========================================
+           ANIMATED GLOW ORB (background decoration)
+           =========================================== */
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+            pointer-events: none;
+            animation: orbFloat 8s ease-in-out infinite alternate;
+        }
+
+        .glow-orb.purple {
+            background: var(--mc-purple);
+        }
+
+        .glow-orb.cyan {
+            background: var(--mc-cyan);
+        }
+
+        .glow-orb.orange {
+            background: var(--mc-orange);
+        }
+
+        @keyframes orbFloat {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(20px, -20px) scale(1.1); }
+        }
+
+        /* ===========================================
+           PROBLEM SLIDE — ICONS
+           =========================================== */
+        .problem-icons {
+            display: flex;
+            gap: clamp(0.5rem, 1.5vw, 1.5rem);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .problem-icon {
+            width: clamp(48px, 7vw, 72px);
+            height: clamp(48px, 7vw, 72px);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1rem;
-        }
-        .auto-benefit h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.2rem; }
-        .auto-benefit p { font-size: 0.8rem; color: var(--text-secondary); }
-
-        /* Full width sections */
-        .full-width {
-            max-width: 100%;
-            background: var(--bg-secondary);
-        }
-        .full-width .inner {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 6rem 2rem;
+            font-size: clamp(1.2rem, 2.5vw, 1.8rem);
         }
 
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 3rem 2rem;
-            color: var(--text-muted);
-            font-size: 0.8rem;
-            border-top: 1px solid var(--border);
-        }
-        footer a { color: var(--accent); text-decoration: none; }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .nav-links { display: none; }
-            section { padding: 4rem 1.5rem; }
-            .workflow-compare { grid-template-columns: 1fr; }
-            .pillars { grid-template-columns: 1fr; }
-            .pricing-grid { grid-template-columns: repeat(2, 1fr); }
-            .traction-grid { grid-template-columns: repeat(2, 1fr); }
-            .roadmap { grid-template-columns: repeat(2, 1fr); }
-            .roadmap::before { display: none; }
-            .team-grid { grid-template-columns: 1fr; }
-            .tam-visual { flex-direction: column; }
-            .tam-circles { width: 280px; height: 280px; }
-            .tam-circle.tam { width: 280px; height: 280px; }
-            .tam-circle.sam { width: 180px; height: 180px; top: 50px; left: 50px; }
-            .tam-circle.som { width: 100px; height: 100px; top: 90px; left: 90px; }
-            .bim-visual { grid-template-columns: 1fr; }
-            .ask-grid { grid-template-columns: repeat(2, 1fr); }
-            .ue-grid { grid-template-columns: 1fr; }
-            .auto-visual { flex-direction: column; }
-            .hero h1 { font-size: 2.2rem; }
-            .hero-stats { gap: 1.5rem; }
-            .advisors { flex-direction: column; align-items: center; gap: 1.5rem; }
+        .problem-icon.broken {
+            opacity: 0.4;
+            border-color: rgba(255, 105, 0, 0.3);
         }
 
-        @media (max-width: 480px) {
-            .pricing-grid { grid-template-columns: 1fr; }
-            .traction-grid { grid-template-columns: 1fr; }
-            .roadmap { grid-template-columns: 1fr; }
+        .vs-arrow {
+            display: flex;
+            align-items: center;
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: clamp(1rem, 2vw, 1.5rem);
+            color: var(--mc-purple);
+            padding: 0 clamp(0.5rem, 1vw, 1rem);
+        }
+
+        .solution-icon {
+            width: clamp(56px, 8vw, 80px);
+            height: clamp(56px, 8vw, 80px);
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(122, 0, 223, 0.2), rgba(6, 182, 212, 0.15));
+            border: 2px solid var(--mc-purple);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1.5rem, 3vw, 2.2rem);
+            box-shadow: 0 0 24px var(--glow-purple);
+        }
+
+        /* ===========================================
+           COUNTER ANIMATION
+           =========================================== */
+        .counter {
+            font-variant-numeric: tabular-nums;
         }
     </style>
 </head>
 <body>
 
-<!-- Navigation -->
-<nav>
-    <div class="logo">META<span>CASA</span></div>
-    <ul class="nav-links">
-        <li><a href="#problema">Problema</a></li>
-        <li><a href="#soluzione">Soluzione</a></li>
-        <li><a href="#workflow">Workflow</a></li>
-        <li><a href="#competitor">Competitor</a></li>
-        <li><a href="#numeri">Numeri</a></li>
-        <li><a href="#team">Team</a></li>
-    </ul>
-    <a href="#ask" class="nav-cta">Seed Round Aperto →</a>
-</nav>
+    <!-- Progress bar -->
+    <div class="progress-bar" id="progressBar"></div>
 
-<!-- SECTION 1: HERO -->
-<section class="hero">
-    <div class="hero-content">
-        <div class="hero-badge" data-aos="fade-down">
-            ⚡ Seed Round Aperto — Target €1.5M
-        </div>
+    <!-- Navigation dots -->
+    <nav class="nav-dots" id="navDots"></nav>
 
-        <h1 data-aos="fade-up" data-aos-delay="100">
-            Vendere casa non dovrebbe<br><span class="highlight">essere un incubo.</span>
-        </h1>
+    <!-- ======================================================
+         SLIDE 1: COVER
+         ====================================================== -->
+    <section class="slide title-slide bg-gradient-mesh bg-grid" data-slide="0">
+        <div class="glow-orb purple" style="width:300px;height:300px;top:10%;left:5%;"></div>
+        <div class="glow-orb cyan" style="width:200px;height:200px;bottom:15%;right:10%;"></div>
 
-        <p class="hero-p" data-aos="fade-up" data-aos-delay="200">
-            Il mercato immobiliare italiano vale €120 miliardi. Ma il servizio delle agenzie
-            è rimasto fermo agli anni '90: lento, opaco, inefficiente. Noi lo stiamo riscrivendo da zero.
-        </p>
+        <div class="slide-content">
+            <div class="logo-text reveal">METACASA</div>
+            <h1 class="reveal" style="margin-top:clamp(1rem,2vw,2rem);">Il Futuro del Real Estate è Qui</h1>
+            <p class="reveal" style="max-width:40ch; color:var(--text-secondary); font-size:var(--body-size);">Team Meeting — Dove siamo, dove andiamo</p>
+            <div class="title-date reveal">Marzo 2026</div>
+        </div>
+    </section>
 
-        <a href="#soluzione" class="hero-cta" data-aos="fade-up" data-aos-delay="300">
-            Scopri MetaCasa OS →
-        </a>
-
-        <div class="hero-stats" data-aos="fade-up" data-aos-delay="400">
-            <div class="hero-stat">
-                <div class="number">€400k+</div>
-                <div class="label">ARR</div>
-            </div>
-            <div class="hero-stat">
-                <div class="number">1.200+</div>
-                <div class="label">Agenzie Attive</div>
-            </div>
-            <div class="hero-stat">
-                <div class="number">3x</div>
-                <div class="label">Crescita YoY</div>
-            </div>
-            <div class="hero-stat">
-                <div class="number">30k+</div>
-                <div class="label">Immobili Processati</div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<div class="section-divider"></div>
-
-<!-- SECTION 2: IL PROBLEMA -->
-<section id="problema">
-    <div class="section-label" data-aos="fade-up">Il Problema</div>
-    <h2 class="section-title" data-aos="fade-up">
-        L'agenzia immobiliare<br>è strutturalmente rotta.
-    </h2>
-    <p class="section-subtitle" data-aos="fade-up">
-        Commissioni del 3-4% per un servizio che nella maggior parte dei casi è lento,
-        disorganizzato e poco trasparente. Anche le agenzie di maggior rilievo non sanno
-        fare questo lavoro realmente. Il valore percepito è vicino allo zero.
-    </p>
-
-    <div class="pain-grid">
-        <div class="pain-card" data-aos="fade-up" data-aos-delay="0">
-            <div class="pain-number">15-20h</div>
-            <h3>Perse ogni settimana</h3>
-            <p>Ogni agente spreca 15-20 ore a settimana in burocrazia, data entry, coordinamento fornitori. Tempo che dovrebbe dedicare a vendere.</p>
-        </div>
-        <div class="pain-card" data-aos="fade-up" data-aos-delay="100">
-            <div class="pain-number">10+</div>
-            <h3>Fornitori per 1 casa</h3>
-            <p>Fotografo, videomaker, geometra, copywriter, social media manager, agenzia ads, home stager... Caos totale.</p>
-        </div>
-        <div class="pain-card" data-aos="fade-up" data-aos-delay="200">
-            <div class="pain-number">80%</div>
-            <h3>Lead persi</h3>
-            <p>Se non rispondi entro 1 ora, la probabilità di chiusura crolla drasticamente. La maggior parte delle agenzie risponde dopo giorni.</p>
-        </div>
-        <div class="pain-card" data-aos="fade-up" data-aos-delay="300">
-            <div class="pain-number">€1.000+</div>
-            <h3>Costo per immobile</h3>
-            <p>Il costo medio per confezionare e promuovere un singolo immobile supera i €1.000. E la qualità? Disomogenea nella migliore delle ipotesi.</p>
-        </div>
-    </div>
-</section>
-
-<div class="section-divider"></div>
-
-<!-- SECTION 3: LA SOLUZIONE -->
-<section id="soluzione">
-    <div class="section-label" data-aos="fade-up">La Soluzione</div>
-    <h2 class="section-title" data-aos="fade-up">
-        Non un altro tool AI.<br>
-        <span style="color: var(--accent)">Il sistema operativo</span> per il Real Estate.
-    </h2>
-    <p class="section-subtitle" data-aos="fade-up">
-        MetaCasa orchestra l'intero ciclo immobiliare in automatico: dall'acquisizione alla vendita.
-        Lasciamo all'agente solo ciò che conta davvero — appuntamenti e negoziazione.
-        Tutto il resto lo facciamo noi.
-    </p>
-
-    <div class="solution-flow" data-aos="fade-up" data-aos-delay="100">
-        <div class="flow-step">
-            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📱</div>
-            <strong>Upload</strong>
-            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.3rem;">Foto smartphone + planimetria + documenti</p>
-        </div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step active">
-            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🤖</div>
-            <strong>MetaCasa Engine</strong>
-            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.3rem;">Agentic AI Orchestra</p>
-        </div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step">
-            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🚀</div>
-            <strong>Risultati</strong>
-            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.3rem;">Listing, Video, Docs, Campagne — tutto pronto</p>
-        </div>
-    </div>
-
-    <div class="pillars" data-aos="fade-up" data-aos-delay="200">
-        <div class="pillar">
-            <div class="pillar-icon">🎨</div>
-            <h3>Contenuti</h3>
-            <p>Visual & Creative AI — Virtual staging, foto HD, video reel, planimetrie 3D, virtual tour, avatar AI</p>
-        </div>
-        <div class="pillar">
-            <div class="pillar-icon">📈</div>
-            <h3>Marketing</h3>
-            <p>Growth & Automation — Annunci SEO, pubblicazione portali, social ads Meta/Google, WhatsApp 24/7</p>
-        </div>
-        <div class="pillar">
-            <div class="pillar-icon">⚙️</div>
-            <h3>Operations</h3>
-            <p>Back-office AI — OCR documenti 99%, checklist conformità, data room, analisi ROI ristrutturazione</p>
-        </div>
-    </div>
-
-    <div style="text-align: center; margin-top: 3rem; padding: 1.5rem; background: var(--bg-card); border-radius: 12px; border: 1px solid var(--border);" data-aos="fade-up">
-        <p style="font-size: 1rem; color: var(--text-secondary);">
-            <strong style="color: var(--accent);">RaaS — Result as a Service.</strong>
-            Non vendiamo software da imparare. Vendiamo risultati pronti all'uso.
-            L'agente carica, MetaCasa consegna. Fine.
-        </p>
-    </div>
-</section>
-
-<div class="section-divider"></div>
-
-<!-- SECTION 4: WORKFLOW COMPARISON -->
-<section id="workflow">
-    <div class="section-label" data-aos="fade-up">Workflow</div>
-    <h2 class="section-title" data-aos="fade-up">
-        Agenzia Tradizionale vs.<br>Agenzia con <span style="color: var(--accent)">MetaCasa</span>
-    </h2>
-
-    <div class="workflow-compare">
-        <div class="workflow-col traditional" data-aos="fade-right">
-            <div class="workflow-header">
-                <span class="tag">Tradizionale</span>
-                <h3>15-20 giorni</h3>
-            </div>
-            <ul class="workflow-steps">
-                <li class="workflow-step">
-                    <span class="step-num">1</span>
-                    <span>Acquisizione incarico e sopralluogo</span>
-                </li>
-                <li class="workflow-step">
-                    <span class="step-num">2</span>
-                    <span>Chiamare fotografo professionista (2-3 giorni di attesa)</span>
-                </li>
-                <li class="workflow-step">
-                    <span class="step-num">3</span>
-                    <span>Contattare geometra per planimetrie (3-5 giorni)</span>
-                </li>
-                <li class="workflow-step">
-                    <span class="step-num">4</span>
-                    <span>Scrivere annuncio manualmente (1 giorno)</span>
-                </li>
-                <li class="workflow-step">
-                    <span class="step-num">5</span>
-                    <span>Pubblicare su ogni portale uno per uno (1 giorno)</span>
-                </li>
-                <li class="workflow-step">
-                    <span class="step-num">6</span>
-                    <span>Ingaggiare agenzia social/videomaker (5+ giorni)</span>
-                </li>
-                <li class="workflow-step">
-                    <span class="step-num">7</span>
-                    <span>Gestire lead manualmente — risposte dopo ore/giorni</span>
-                </li>
-                <li class="workflow-step">
-                    <span class="step-num">8</span>
-                    <span>Documentazione frammentata tra email, WhatsApp, carta</span>
-                </li>
-            </ul>
-            <div class="workflow-bottom">
-                <div class="workflow-metric">
-                    <div class="val">€1.000+</div>
-                    <div class="desc">Costo / immobile</div>
-                </div>
-                <div class="workflow-metric">
-                    <div class="val">15-20gg</div>
-                    <div class="desc">Time to market</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="workflow-col metacasa" data-aos="fade-left">
-            <div class="workflow-header">
-                <span class="tag">Con MetaCasa</span>
-                <h3>< 24 ore</h3>
-            </div>
-            <ul class="workflow-steps">
-                <li class="workflow-step">
-                    <span class="step-num">1</span>
-                    <span>Upload foto smartphone + planimetria catastale</span>
-                </li>
-                <li class="workflow-step">
-                    <span class="step-num">2</span>
-                    <span>AI genera foto HD, virtual staging, enhancement automatico</span>
-                </li>
-                <li class="workflow-step">
-                    <span class="step-num">3</span>
-                    <span>Video reel, avatar AI, virtual tour generati in minuti</span>
-                </li>
-                <li class="workflow-step">
-                    <span class="step-num">4</span>
-                    <span>Planimetrie 2D/3D arredate e quotate automatiche</span>
-                </li>
-                <li class="workflow-step">
-                    <span class="step-num">5</span>
-                    <span>Testi SEO, brochure PDF, landing page — tutto generato</span>
-                </li>
-                <li class="workflow-step">
-                    <span class="step-num">6</span>
-                    <span>Pubblicazione automatica portali + campagne social ads</span>
-                </li>
-                <li class="workflow-step">
-                    <span class="step-num">7</span>
-                    <span>Lead management 24/7 via WhatsApp e Telegram</span>
-                </li>
-                <li class="workflow-step">
-                    <span class="step-num">8</span>
-                    <span>Doc intelligence: OCR, compliance check, data room digitale</span>
-                </li>
-            </ul>
-            <div class="workflow-bottom">
-                <div class="workflow-metric">
-                    <div class="val">€49</div>
-                    <div class="desc">Costo / immobile</div>
-                </div>
-                <div class="workflow-metric">
-                    <div class="val">< 24h</div>
-                    <div class="desc">Time to market</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div style="text-align: center; margin-top: 2rem;" data-aos="fade-up">
-        <div style="display: inline-flex; align-items: center; gap: 1rem; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); padding: 1rem 2rem; border-radius: 100px;">
-            <span style="font-size: 1.5rem; font-weight: 800; color: var(--success);">-95%</span>
-            <span style="color: var(--text-secondary); font-size: 0.9rem;">riduzione costi per immobile</span>
-            <span style="color: var(--text-muted); margin: 0 0.5rem;">|</span>
-            <span style="font-size: 1.5rem; font-weight: 800; color: var(--success);">20x</span>
-            <span style="color: var(--text-secondary); font-size: 0.9rem;">più veloce</span>
-        </div>
-    </div>
-</section>
-
-<div class="section-divider"></div>
-
-<!-- SECTION 5: CAPABILITIES -->
-<section>
-    <div class="section-label" data-aos="fade-up">Cosa Facciamo Già</div>
-    <h2 class="section-title" data-aos="fade-up">
-        12 servizi. Un click.<br>Zero competenze richieste.
-    </h2>
-
-    <div class="cap-grid">
-        <div class="cap-card" data-aos="fade-up" data-aos-delay="0">
-            <div class="cap-icon">📸</div>
-            <div>
-                <h4>Photo Enhancement HDR</h4>
-                <p>Decluttering, correzione luci e colori professionali</p>
-            </div>
-        </div>
-        <div class="cap-card" data-aos="fade-up" data-aos-delay="50">
-            <div class="cap-icon">🛋️</div>
-            <div>
-                <h4>Virtual Staging</h4>
-                <p>Arredo fotorealistico per spazi vuoti o da svuotare</p>
-            </div>
-        </div>
-        <div class="cap-card" data-aos="fade-up" data-aos-delay="100">
-            <div class="cap-icon">🎬</div>
-            <div>
-                <h4>Video Reel & Avatar AI</h4>
-                <p>Reel verticali per Instagram/TikTok con presenter AI</p>
-            </div>
-        </div>
-        <div class="cap-card" data-aos="fade-up" data-aos-delay="150">
-            <div class="cap-icon">🏠</div>
-            <div>
-                <h4>Virtual Tour Immersivo</h4>
-                <p>Navigazione 3D generata da semplici foto smartphone</p>
-            </div>
-        </div>
-        <div class="cap-card" data-aos="fade-up" data-aos-delay="200">
-            <div class="cap-icon">📐</div>
-            <div>
-                <h4>Planimetrie 2D/3D</h4>
-                <p>Da catastale a planimetria arredata, colorata e quotata</p>
-            </div>
-        </div>
-        <div class="cap-card" data-aos="fade-up" data-aos-delay="250">
-            <div class="cap-icon">🪑</div>
-            <div>
-                <h4>Generazione Arredo</h4>
-                <p>Prospettive diverse con stili di arredo personalizzabili</p>
-            </div>
-        </div>
-        <div class="cap-card" data-aos="fade-up" data-aos-delay="300">
-            <div class="cap-icon">🔨</div>
-            <div>
-                <h4>Piani Ristrutturazione</h4>
-                <p>Progetto di ristrutturazione con render prima/dopo</p>
-            </div>
-        </div>
-        <div class="cap-card" data-aos="fade-up" data-aos-delay="350">
-            <div class="cap-icon">💰</div>
-            <div>
-                <h4>Calcolo Costi</h4>
-                <p>Stima automatica costi di ristrutturazione dettagliata</p>
-            </div>
-        </div>
-        <div class="cap-card" data-aos="fade-up" data-aos-delay="400">
-            <div class="cap-icon">✍️</div>
-            <div>
-                <h4>Testi SEO & Annunci</h4>
-                <p>Copy ottimizzati per portali e social media</p>
-            </div>
-        </div>
-        <div class="cap-card" data-aos="fade-up" data-aos-delay="450">
-            <div class="cap-icon">📄</div>
-            <div>
-                <h4>Brochure & Landing Page</h4>
-                <p>PDF impaginati e siti dedicati per ogni immobile</p>
-            </div>
-        </div>
-        <div class="cap-card" data-aos="fade-up" data-aos-delay="500">
-            <div class="cap-icon">📣</div>
-            <div>
-                <h4>Social Ads Automation</h4>
-                <p>Campagne Meta e Google lanciate in automatico</p>
-            </div>
-        </div>
-        <div class="cap-card" data-aos="fade-up" data-aos-delay="550">
-            <div class="cap-icon">📋</div>
-            <div>
-                <h4>Doc Intelligence</h4>
-                <p>OCR 99% accuratezza su visure, APE, catastali</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<div class="section-divider"></div>
-
-<!-- SECTION 6: BIM IMMOBILIARE -->
-<section>
-    <div class="section-label" data-aos="fade-up">Il Fulcro</div>
-    <h2 class="section-title" data-aos="fade-up">
-        BIM Immobiliare:<br>il <span style="color: var(--accent)">Digital Twin</span> di ogni immobile.
-    </h2>
-    <p class="section-subtitle" data-aos="fade-up">
-        Il vero vantaggio competitivo non è nella generazione dei contenuti — è nella gestione
-        strutturata del dato immobiliare. Ogni immobile diventa un asset digitale completo,
-        dal primo contatto fino al rogito notarile.
-    </p>
-
-    <div class="bim-visual">
-        <div class="bim-flow" data-aos="fade-right">
-            <div class="bim-step">
-                <div class="num">1</div>
-                <div>
-                    <strong>Acquisizione Dati</strong>
-                    <p style="font-size: 0.8rem; color: var(--text-muted);">Catasto, visura, APE, foto, documenti — tutto centralizzato</p>
-                </div>
-            </div>
-            <div class="bim-step">
-                <div class="num">2</div>
-                <div>
-                    <strong>BIM Immobiliare</strong>
-                    <p style="font-size: 0.8rem; color: var(--text-muted);">Modello digitale dell'immobile con tutti i dati strutturati</p>
-                </div>
-            </div>
-            <div class="bim-step">
-                <div class="num">3</div>
-                <div>
-                    <strong>Valorizzazione AI</strong>
-                    <p style="font-size: 0.8rem; color: var(--text-muted);">Stima valore basata su dati reali, comparabili e trend</p>
-                </div>
-            </div>
-            <div class="bim-step">
-                <div class="num">4</div>
-                <div>
-                    <strong>Compliance & Docs</strong>
-                    <p style="font-size: 0.8rem; color: var(--text-muted);">Verifica automatica documentazione per il rogito</p>
-                </div>
-            </div>
-            <div class="bim-step">
-                <div class="num">5</div>
-                <div>
-                    <strong>Fino al Rogito</strong>
-                    <p style="font-size: 0.8rem; color: var(--text-muted);">Gestione end-to-end dell'intero processo di compravendita</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="bim-info" data-aos="fade-left">
-            <h3>Perché il BIM cambia tutto</h3>
-            <p>
-                La ricerca di immobili vendibili diventa proattiva e data-driven.
-                La valorizzazione è trasparente e basata su dati reali.
-                La compliance documentale è automatica.
+    <!-- ======================================================
+         SLIDE 2: LA NOSTRA STORIA
+         ====================================================== -->
+    <section class="slide bg-gradient-deep" data-slide="1">
+        <span class="slide-number">01</span>
+        <div class="slide-content" style="max-width:1100px;margin:0 auto;">
+            <div class="section-label reveal">Chi siamo</div>
+            <div class="accent-line reveal"></div>
+            <h2 class="reveal" style="margin-bottom:var(--content-gap);">Il Nostro Percorso</h2>
+            <p class="reveal" style="max-width:60ch;margin-bottom:clamp(1.5rem,3vw,3rem);">
+                Da un'idea semplice — rendere la ristrutturazione trasparente e accessibile — a una piattaforma AI che sta trasformando il modo in cui si lavora nel real estate.
             </p>
-            <p style="margin-top: 1rem;">
-                <strong style="color: var(--accent);">Non sostituiamo l'agente. Sostituiamo l'incompetenza.</strong>
-                Le agenzie continuano a fare ciò che sanno fare meglio — relazione umana,
-                appuntamenti, negoziazione. Noi gestiamo tutto il resto con precisione e velocità
-                che nessun team umano può eguagliare.
+            <div class="timeline reveal-scale" style="transition-delay:0.3s;">
+                <div class="timeline-item">
+                    <div class="timeline-year">2024</div>
+                    <div class="timeline-text">Nascita dell'idea<br>Primi prototipi</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">Q4 2024</div>
+                    <div class="timeline-text">Primi clienti<br>Product-market fit</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">2025</div>
+                    <div class="timeline-text">+1.000 agenzie<br>Crescita 4x</div>
+                </div>
+                <div class="timeline-item active">
+                    <div class="timeline-year">2026</div>
+                    <div class="timeline-text">+500k ARR<br>Nuova fase</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================================================
+         SLIDE 3: QUOTE — L'INCUBO IMMOBILIARE
+         ====================================================== -->
+    <section class="slide bg-gradient-deep" data-slide="2">
+        <span class="slide-number">02</span>
+        <div class="glow-orb orange" style="width:250px;height:250px;bottom:20%;left:10%;opacity:0.1;"></div>
+
+        <div class="slide-content centered-content" style="max-width:900px;margin:0 auto;">
+            <h2 class="reveal" style="font-size:clamp(1.8rem,4.5vw,3.5rem);max-width:18ch;line-height:1.15;margin-bottom:clamp(1.5rem,3vw,3rem);">
+                Vendere e acquistare casa,<br>per il consumatore,<br>
+                <span style="background:var(--accent-gradient-warm);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">è ancora un incubo.</span>
+            </h2>
+
+            <div style="display:flex;flex-direction:column;gap:clamp(0.6rem,1.2vw,1rem);max-width:550px;" class="reveal" style="transition-delay:0.2s;">
+                <div style="display:flex;align-items:center;gap:clamp(0.5rem,1vw,0.75rem);">
+                    <span style="color:var(--mc-orange);font-size:clamp(1rem,1.5vw,1.2rem);">x</span>
+                    <span style="color:var(--text-secondary);font-size:var(--body-size);">Poca trasparenza sulla trattativa</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:clamp(0.5rem,1vw,0.75rem);">
+                    <span style="color:var(--mc-orange);font-size:clamp(1rem,1.5vw,1.2rem);">x</span>
+                    <span style="color:var(--text-secondary);font-size:var(--body-size);">Documenti persi, incompleti, in ritardo</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:clamp(0.5rem,1vw,0.75rem);">
+                    <span style="color:var(--mc-orange);font-size:clamp(1rem,1.5vw,1.2rem);">x</span>
+                    <span style="color:var(--text-secondary);font-size:var(--body-size);">Marketing immobiliare mediocre o inesistente</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:clamp(0.5rem,1vw,0.75rem);">
+                    <span style="color:var(--mc-orange);font-size:clamp(1rem,1.5vw,1.2rem);">x</span>
+                    <span style="color:var(--text-secondary);font-size:var(--body-size);">Tempi infiniti, frustrazioni continue</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================================================
+         SLIDE 4: IL PROBLEMA DELLE AGENZIE
+         ====================================================== -->
+    <section class="slide bg-gradient-warm" data-slide="3">
+        <span class="slide-number">03</span>
+        <div class="slide-content centered-content" style="max-width:950px;margin:0 auto;">
+            <div class="section-label reveal">Il contesto</div>
+            <div class="accent-line reveal" style="margin-left:auto;margin-right:auto;"></div>
+            <h2 class="reveal" style="margin-bottom:clamp(0.5rem,1vw,1rem);">Ma il problema non è (solo) delle agenzie.</h2>
+            <p class="reveal" style="max-width:55ch;margin-bottom:clamp(1.5rem,2.5vw,2rem);color:var(--text-secondary);">
+                Il settore immobiliare è rimasto indietro di 10 anni. Le agenzie sono intrappolate in un sistema che le costringe a lavorare male.
+            </p>
+
+            <div class="three-col">
+                <div class="feature-card reveal" style="transition-delay:0.15s;border-color:rgba(255,105,0,0.25);">
+                    <div class="feature-icon">🧩</div>
+                    <h3 style="color:var(--mc-orange);">Software frammentato</h3>
+                    <p>5-6 tool scollegati tra loro. Dati duplicati, errori, tempo perso a rincorrere informazioni.</p>
+                </div>
+                <div class="feature-card reveal" style="transition-delay:0.25s;border-color:rgba(255,105,0,0.25);">
+                    <div class="feature-icon">⏳</div>
+                    <h3 style="color:var(--mc-orange);">Tempo sprecato</h3>
+                    <p>Le agenzie passano più tempo su burocrazia e operatività che a fare ciò che sanno fare: vendere.</p>
+                </div>
+                <div class="feature-card reveal" style="transition-delay:0.35s;border-color:rgba(255,105,0,0.25);">
+                    <div class="feature-icon">📉</div>
+                    <h3 style="color:var(--mc-orange);">Risultati sotto il potenziale</h3>
+                    <p>Annunci poco attrattivi, documentazione incompleta, clienti insoddisfatti. E l'unica leva? Abbassare il prezzo.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================================================
+         SLIDE 5: LA PIATTAFORMA OGGI — OVERVIEW
+         ====================================================== -->
+    <section class="slide bg-gradient-mesh" data-slide="4">
+        <span class="slide-number">03</span>
+        <div class="slide-content" style="max-width:1100px;margin:0 auto;">
+            <div class="section-label reveal">Cosa abbiamo costruito</div>
+            <div class="accent-line reveal"></div>
+            <h2 class="reveal" style="margin-bottom:clamp(1rem,2.5vw,2.5rem);">La Piattaforma Metacasa</h2>
+
+            <div class="three-col">
+                <div class="feature-card reveal" style="transition-delay:0.15s;">
+                    <div class="feature-icon">🎨</div>
+                    <h3>AI Visual Marketing</h3>
+                    <p>Da foto grezze a Render 3D, Virtual Tour, Video Social e contenuti pronti per i portali.</p>
+                </div>
+                <div class="feature-card reveal" style="transition-delay:0.25s;">
+                    <div class="feature-icon">📋</div>
+                    <h3>AI Compliance & OPS</h3>
+                    <p>Smart Docs, check automatico del fascicolo, cross-check difformità. Zero errori documentali.</p>
+                </div>
+                <div class="feature-card reveal" style="transition-delay:0.35s;">
+                    <div class="feature-icon">🚀</div>
+                    <h3>Sales Automation</h3>
+                    <p>Sync CRM e portali, AI Assistant 24/7 su WhatsApp ed email, lead nurturing automatico.</p>
+                </div>
+            </div>
+
+            <p class="reveal" style="text-align:center;margin-top:clamp(1rem,2vw,2rem);font-size:var(--small-size);color:var(--text-muted);">
+                3 professionisti in un unico engine: Architetto + Legale + Marketer
             </p>
         </div>
-    </div>
-</section>
+    </section>
 
-<div class="section-divider"></div>
+    <!-- ======================================================
+         SLIDE 6: VISUAL MARKETING — DEEP DIVE
+         ====================================================== -->
+    <section class="slide bg-gradient-deep bg-grid" data-slide="5">
+        <span class="slide-number">05</span>
+        <div class="slide-content" style="max-width:1000px;margin:0 auto;">
+            <div class="section-label reveal">Pilastro 1</div>
+            <div class="accent-line reveal"></div>
+            <h2 class="reveal" style="margin-bottom:clamp(0.5rem,1.5vw,1.5rem);">AI Visual Marketing</h2>
+            <p class="reveal" style="max-width:55ch;margin-bottom:clamp(1rem,2vw,2rem);">
+                Trasformiamo foto grezze in contenuti che vendono — in minuti, non settimane.
+            </p>
 
-<!-- SECTION 7: TRACTION & MOAT -->
-<section>
-    <div class="section-label" data-aos="fade-up">Traction & Moat</div>
-    <h2 class="section-title" data-aos="fade-up">
-        La distribuzione è il nostro<br><span style="color: var(--accent)">vantaggio competitivo.</span>
-    </h2>
-
-    <div class="traction-grid">
-        <div class="traction-card" data-aos="fade-up" data-aos-delay="0">
-            <div class="traction-number">1.200+</div>
-            <div class="traction-label">Agenzie Attive</div>
-            <div class="traction-sub">In tutta Italia</div>
-        </div>
-        <div class="traction-card" data-aos="fade-up" data-aos-delay="100">
-            <div class="traction-number">20k+</div>
-            <div class="traction-label">Contatti GDPR</div>
-            <div class="traction-sub">Database vendita compliant</div>
-        </div>
-        <div class="traction-card" data-aos="fade-up" data-aos-delay="200">
-            <div class="traction-number">30k+</div>
-            <div class="traction-label">Immobili Processati</div>
-            <div class="traction-sub">Data flywheel in azione</div>
-        </div>
-        <div class="traction-card" data-aos="fade-up" data-aos-delay="300">
-            <div class="traction-number">250k+</div>
-            <div class="traction-label">Ore Risparmiate</div>
-            <div class="traction-sub">Per i nostri clienti</div>
-        </div>
-    </div>
-
-    <div style="margin-top: 3rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 2rem;" data-aos="fade-up">
-        <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">🔄 Data Flywheel — Il Nostro Moat Difensivo</h3>
-        <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.7;">
-            Modelli AI addestrati su <strong style="color: var(--text-primary);">50.000+ immobili europei annotati</strong>.
-            Ogni immobile processato rende l'AI più precisa. Ogni agenzia che si collega
-            arricchisce il dataset. Più la piattaforma viene usata, più diventa inattaccabile
-            dai competitor — americani o europei. Con <strong style="color: var(--text-primary);">OCR al 99% di accuratezza</strong>
-            sui documenti immobiliari italiani, abbiamo un vantaggio locale impossibile da replicare overnight.
-        </p>
-    </div>
-</section>
-
-<div class="section-divider"></div>
-
-<!-- SECTION 8: COMPETITOR ANALYSIS -->
-<section id="competitor">
-    <div class="section-label" data-aos="fade-up">Landscape Competitivo</div>
-    <h2 class="section-title" data-aos="fade-up">
-        Nessuno in Europa offre un OS<br>agentico end-to-end per le agenzie.
-    </h2>
-
-    <div class="comp-table-wrap" data-aos="fade-up">
-        <table class="comp-table">
-            <thead>
-                <tr>
-                    <th>Feature</th>
-                    <th class="mc">MetaCasa 🇮🇹</th>
-                    <th>Gestim / Miogest<br><small style="color: var(--text-muted);">Idealista 🇮🇹</small></th>
-                    <th>Matterport<br><small style="color: var(--text-muted);">CoStar 🇺🇸</small></th>
-                    <th>Virtual Staging AI<br><small style="color: var(--text-muted);">Tools 🇺🇸</small></th>
-                    <th>Compass<br><small style="color: var(--text-muted);">🇺🇸</small></th>
-                    <th>Breezy / Lofty<br><small style="color: var(--text-muted);">🇺🇸</small></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>OS End-to-End</td>
-                    <td class="mc check">✅ Full</td>
-                    <td class="cross">❌ CRM only</td>
-                    <td class="cross">❌ 3D only</td>
-                    <td class="cross">❌ Staging only</td>
-                    <td class="partial">⚠️ Solo US</td>
-                    <td class="partial">⚠️ Solo US</td>
-                </tr>
-                <tr>
-                    <td>Contenuti AI Generativi</td>
-                    <td class="mc check">✅ Full Suite</td>
-                    <td class="cross">❌</td>
-                    <td class="cross">❌</td>
-                    <td class="partial">⚠️ Parziale</td>
-                    <td class="cross">❌</td>
-                    <td class="partial">⚠️ Parziale</td>
-                </tr>
-                <tr>
-                    <td>Marketing Automation</td>
-                    <td class="mc check">✅</td>
-                    <td class="cross">❌</td>
-                    <td class="cross">❌</td>
-                    <td class="cross">❌</td>
-                    <td class="partial">⚠️</td>
-                    <td class="partial">⚠️</td>
-                </tr>
-                <tr>
-                    <td>Doc Intelligence & OCR</td>
-                    <td class="mc check">✅ 99%</td>
-                    <td class="cross">❌</td>
-                    <td class="cross">❌</td>
-                    <td class="cross">❌</td>
-                    <td class="cross">❌</td>
-                    <td class="cross">❌</td>
-                </tr>
-                <tr>
-                    <td>BIM Immobiliare</td>
-                    <td class="mc check">✅ Roadmap</td>
-                    <td class="cross">❌</td>
-                    <td class="partial">⚠️ Parziale</td>
-                    <td class="cross">❌</td>
-                    <td class="cross">❌</td>
-                    <td class="cross">❌</td>
-                </tr>
-                <tr>
-                    <td>Compliance EU / GDPR</td>
-                    <td class="mc check">✅ Nativo</td>
-                    <td class="check">✅</td>
-                    <td class="cross">❌</td>
-                    <td class="cross">❌</td>
-                    <td class="cross">❌</td>
-                    <td class="cross">❌</td>
-                </tr>
-                <tr>
-                    <td>Prezzo / Immobile</td>
-                    <td class="mc" style="color: var(--success); font-weight: 700;">Da €49</td>
-                    <td>€50-100/mese</td>
-                    <td>€350+/tour</td>
-                    <td>$24/stanza</td>
-                    <td>N/A</td>
-                    <td>N/A</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <div class="comp-cards" data-aos="fade-up">
-        <div class="comp-card">
-            <h4>Gestim / Miogest <span class="tag-small">Idealista</span></h4>
-            <p>CRM legacy acquisiti da Idealista nel 2020. 18k utenti ma piattaforma stagnante, zero AI, portale-first. Non un OS per l'agenzia.</p>
-        </div>
-        <div class="comp-card">
-            <h4>Matterport <span class="tag-small">CoStar — $1.6B</span></h4>
-            <p>Solo 3D e virtual tour. €350+ per singolo tour. Nessuna suite marketing, nessun workflow, nessuna automazione operativa.</p>
-        </div>
-        <div class="comp-card">
-            <h4>Virtual Staging Tools <span class="tag-small">US-based</span></h4>
-            <p>ReimagineHome, Collov, Stager AI — point solutions isolate. Nessuna integrazione con il workflow dell'agenzia. Un pezzo del puzzle, non la soluzione.</p>
-        </div>
-        <div class="comp-card">
-            <h4>Compass / Breezy / Lofty <span class="tag-small">Solo USA</span></h4>
-            <p>OS concept simile al nostro, ma zero presenza in Europa. No compliance GDPR, no portali italiani, no documenti EU. Non arriveranno qui per anni.</p>
-        </div>
-    </div>
-</section>
-
-<div class="section-divider"></div>
-
-<!-- SECTION 9: AUTOMAZIONE INTERNA -->
-<section>
-    <div class="section-label" data-aos="fade-up">Scalabilità</div>
-    <h2 class="section-title" data-aos="fade-up">
-        Automazione interna al 70%.<br>Margini che scalano.
-    </h2>
-
-    <div class="auto-visual">
-        <div class="auto-ring" data-aos="fade-right">
-            <div class="ring-val">70%</div>
-            <div class="ring-label">Automatizzato</div>
-        </div>
-
-        <div class="auto-benefits" data-aos="fade-left">
-            <div class="auto-benefit">
-                <div class="ab-icon">🤖</div>
-                <div>
-                    <h4>Approccio Agentico Interno</h4>
-                    <p>Non solo per i clienti: anche i processi interni di MetaCasa sono gestiti da agenti AI. Dal customer success alla quality assurance.</p>
+            <div class="metrics-grid four reveal-scale" style="transition-delay:0.3s;">
+                <div class="metric-card">
+                    <div style="font-size:clamp(1.5rem,3vw,2.5rem);margin-bottom:0.3rem;">🏠</div>
+                    <h3 style="font-size:var(--body-size);">Render 3D</h3>
+                    <p style="font-size:var(--small-size);">Fotorealistici da planimetria</p>
                 </div>
-            </div>
-            <div class="auto-benefit">
-                <div class="ab-icon">📉</div>
-                <div>
-                    <h4>Costi Marginali → Zero</h4>
-                    <p>Ogni nuovo cliente ha un costo marginale tendente a zero. Gross margin 90%+ con struttura AI-based.</p>
+                <div class="metric-card">
+                    <div style="font-size:clamp(1.5rem,3vw,2.5rem);margin-bottom:0.3rem;">🔄</div>
+                    <h3 style="font-size:var(--body-size);">Virtual Tour</h3>
+                    <p style="font-size:var(--small-size);">Immersivi e interattivi</p>
                 </div>
-            </div>
-            <div class="auto-benefit">
-                <div class="ab-icon">🚀</div>
-                <div>
-                    <h4>Da 1.200 a 10.000 Agenzie</h4>
-                    <p>Scalare senza aumentare proporzionalmente l'headcount. L'AI gestisce il volume, il team gestisce la strategia.</p>
+                <div class="metric-card">
+                    <div style="font-size:clamp(1.5rem,3vw,2.5rem);margin-bottom:0.3rem;">🎬</div>
+                    <h3 style="font-size:var(--body-size);">Video Social</h3>
+                    <p style="font-size:var(--small-size);">Pronti per ogni piattaforma</p>
+                </div>
+                <div class="metric-card">
+                    <div style="font-size:clamp(1.5rem,3vw,2.5rem);margin-bottom:0.3rem;">📐</div>
+                    <h3 style="font-size:var(--body-size);">Planimetrie 2D</h3>
+                    <p style="font-size:var(--small-size);">Professionali e accurate</p>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<div class="section-divider"></div>
+    <!-- ======================================================
+         SLIDE 6: COMPLIANCE & SALES — DEEP DIVE
+         ====================================================== -->
+    <section class="slide bg-gradient-warm" data-slide="6">
+        <span class="slide-number">06</span>
+        <div class="slide-content" style="max-width:1000px;margin:0 auto;">
+            <div class="section-label reveal">Pilastri 2 & 3</div>
+            <div class="accent-line reveal"></div>
+            <h2 class="reveal" style="margin-bottom:clamp(1rem,2vw,2rem);">Compliance & Sales</h2>
 
-<!-- SECTION 10: NUMERI & BUSINESS MODEL -->
-<section id="numeri">
-    <div class="section-label" data-aos="fade-up">Unit Economics</div>
-    <h2 class="section-title" data-aos="fade-up">
-        Metriche SaaS<br><span style="color: var(--accent)">best-in-class.</span>
-    </h2>
-
-    <div class="ue-grid">
-        <div class="ue-card" data-aos="fade-up" data-aos-delay="0">
-            <div class="ue-val">€1.5k</div>
-            <div class="ue-info">
-                <h4>ARPU Annuale</h4>
-                <p>Ricavo medio per agenzia all'anno — in crescita con upselling</p>
+            <div class="two-columns reveal-scale" style="transition-delay:0.2s;">
+                <div>
+                    <h3 style="color:var(--mc-cyan);margin-bottom:clamp(0.5rem,1vw,0.75rem);">📋 Doc-Intelligence</h3>
+                    <ul class="styled-list">
+                        <li>Drag & drop massivo documenti</li>
+                        <li>Check automatico fascicolo</li>
+                        <li>Cross-check difformità</li>
+                        <li>Fascicolo notaio completo</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 style="color:var(--mc-orange);margin-bottom:clamp(0.5rem,1vw,0.75rem);">🚀 Sales Engine</h3>
+                    <ul class="styled-list">
+                        <li>Sync automatico CRM e portali</li>
+                        <li>AI Assistant WhatsApp 24/7</li>
+                        <li>Lead nurturing intelligente</li>
+                        <li>Email follow-up automatici</li>
+                    </ul>
+                </div>
             </div>
         </div>
-        <div class="ue-card" data-aos="fade-up" data-aos-delay="100">
-            <div class="ue-val">€20-40</div>
-            <div class="ue-info">
-                <h4>CAC Blended</h4>
-                <p>Costo acquisizione bassissimo. Payback period inferiore a 1 mese</p>
-            </div>
-        </div>
-        <div class="ue-card" data-aos="fade-up" data-aos-delay="200">
-            <div class="ue-val">90%+</div>
-            <div class="ue-info">
-                <h4>Gross Margin</h4>
-                <p>Struttura costi AI-based con costi marginali tendenti a zero</p>
-            </div>
-        </div>
-        <div class="ue-card" data-aos="fade-up" data-aos-delay="300">
-            <div class="ue-val">>10x</div>
-            <div class="ue-info">
-                <h4>LTV / CAC Ratio</h4>
-                <p>Estrema efficienza nell'acquisizione. Unit economics profittevoli dal giorno 1</p>
-            </div>
-        </div>
-    </div>
+    </section>
 
-    <!-- Pricing -->
-    <h3 style="font-size: 1.3rem; font-weight: 700; margin-top: 4rem; margin-bottom: 0.5rem;" data-aos="fade-up">Pricing Flessibile</h3>
-    <p style="color: var(--text-secondary); margin-bottom: 2rem;" data-aos="fade-up">Dal SaaS ricorrente al pay-per-use. Zero barriere d'ingresso.</p>
+    <!-- ======================================================
+         SLIDE 7: NUMERI CHE PARLANO
+         ====================================================== -->
+    <section class="slide bg-gradient-mesh bg-grid" data-slide="7">
+        <span class="slide-number">07</span>
+        <div class="glow-orb purple" style="width:250px;height:250px;top:20%;right:5%;"></div>
+        <div class="slide-content centered-content" style="max-width:1000px;margin:0 auto;">
+            <div class="section-label reveal">I risultati</div>
+            <div class="accent-line reveal" style="margin-left:auto;margin-right:auto;"></div>
+            <h2 class="reveal" style="margin-bottom:clamp(1.5rem,3vw,3rem);">Numeri che Parlano</h2>
 
-    <div class="pricing-grid" data-aos="fade-up">
-        <div class="price-card">
-            <div class="price-name">Starter</div>
-            <div class="price-amount">€29<span>/mese</span></div>
-            <div class="price-desc">Single Agent</div>
-            <ul class="price-features">
-                <li>Accesso base AI</li>
-                <li>Photo enhancement</li>
-                <li>Virtual staging</li>
-                <li>Planimetrie 2D</li>
+            <div class="metrics-grid four reveal-scale" style="transition-delay:0.25s;">
+                <div class="metric-card">
+                    <div class="metric-value counter" data-target="500" data-prefix="+€" data-suffix="k">+€0k</div>
+                    <div class="metric-label">ARR</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value orange counter" data-target="1000" data-prefix="+" data-suffix="">+0</div>
+                    <div class="metric-label">Agenzie attive</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value counter" data-target="4" data-prefix="" data-suffix="x">0x</div>
+                    <div class="metric-label">Crescita YoY</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value orange counter" data-target="90" data-prefix="" data-suffix="%">0%</div>
+                    <div class="metric-label">Gross Margin</div>
+                </div>
+            </div>
+
+            <p class="reveal" style="margin-top:clamp(1rem,2vw,2rem);font-size:var(--small-size);color:var(--text-muted);">
+                Non promesse — numeri reali costruiti insieme.
+            </p>
+        </div>
+    </section>
+
+    <!-- ======================================================
+         SLIDE 8: IMPATTO SUI CLIENTI
+         ====================================================== -->
+    <section class="slide bg-gradient-deep" data-slide="8">
+        <span class="slide-number">08</span>
+        <div class="slide-content centered-content" style="max-width:900px;margin:0 auto;">
+            <div class="section-label reveal">Impatto</div>
+            <div class="accent-line reveal" style="margin-left:auto;margin-right:auto;"></div>
+            <h2 class="reveal" style="margin-bottom:clamp(1.5rem,3vw,3rem);">L'Effetto Metacasa sui Clienti</h2>
+
+            <div class="metrics-grid two reveal-scale" style="transition-delay:0.25s;max-width:600px;margin:0 auto;">
+                <div class="metric-card">
+                    <div class="metric-value counter" data-target="94" data-prefix="+" data-suffix="%">+0%</div>
+                    <div class="metric-label">Click sugli annunci</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value orange counter" data-target="42" data-prefix="+" data-suffix="%">+0%</div>
+                    <div class="metric-label">Telefonate ricevute</div>
+                </div>
+            </div>
+
+            <div class="quote-block reveal" style="margin-top:clamp(1.5rem,3vw,3rem);max-width:50ch;">
+                Le agenzie che usano Metacasa vendono più velocemente e a un prezzo più alto.
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================================================
+         SLIDE 10: LA VISION
+         ====================================================== -->
+    <section class="slide bg-gradient-mesh" data-slide="9">
+        <span class="slide-number">09</span>
+        <div class="glow-orb purple" style="width:350px;height:350px;bottom:10%;left:5%;"></div>
+        <div class="glow-orb cyan" style="width:200px;height:200px;top:15%;right:15%;"></div>
+
+        <div class="slide-content centered-content" style="max-width:900px;margin:0 auto;">
+            <div class="section-label reveal">La vision</div>
+            <div class="accent-line reveal" style="margin-left:auto;margin-right:auto;"></div>
+            <h2 class="reveal" style="margin-bottom:clamp(1rem,2vw,1.5rem);font-size:clamp(1.8rem,4vw,3.2rem);">
+                Il primo Sistema Operativo<br>
+                <span style="background:var(--accent-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">All-In-One</span><br>
+                per il Real Estate
+            </h2>
+            <p class="reveal" style="max-width:50ch;margin-bottom:clamp(1.5rem,3vw,2.5rem);">
+                Non un altro tool da gestire. Una piattaforma intelligente che esegue il lavoro operativo: dal marketing alla compliance, dalla documentazione alla vendita.
+            </p>
+
+            <div class="highlight-box reveal-scale" style="transition-delay:0.3s;max-width:600px;">
+                <h3 style="color:var(--text-primary);font-size:var(--body-size);">Il nostro salto evolutivo</h3>
+                <p style="font-size:var(--small-size);margin-top:0.3rem;">
+                    Da <strong style="color:var(--text-muted);">strumento di ristrutturazione</strong> a <strong style="color:var(--mc-purple);">piattaforma operativa completa</strong> che copre l'intera catena del valore immobiliare.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================================================
+         SLIDE 11: ROADMAP PRODOTTO
+         ====================================================== -->
+    <section class="slide bg-gradient-deep bg-grid" data-slide="10">
+        <span class="slide-number">10</span>
+        <div class="slide-content" style="max-width:1100px;margin:0 auto;">
+            <div class="section-label reveal">Roadmap</div>
+            <div class="accent-line reveal"></div>
+            <h2 class="reveal" style="margin-bottom:clamp(1.5rem,3vw,2.5rem);">Dove Stiamo Andando</h2>
+
+            <div class="roadmap-grid">
+                <div class="roadmap-card current reveal" style="transition-delay:0.15s;">
+                    <div class="year">2026 — Ora</div>
+                    <ul>
+                        <li>AI Video Suite completa</li>
+                        <li>Doc-Intelligence avanzata</li>
+                        <li>Target: 1M ARR</li>
+                    </ul>
+                </div>
+                <div class="roadmap-card reveal" style="transition-delay:0.25s;">
+                    <div class="year">2027</div>
+                    <ul>
+                        <li>Voice & WhatsApp AI</li>
+                        <li>Deep CRM Integration</li>
+                        <li>Ad-Tech Autopilot</li>
+                        <li>Automazione end-to-end</li>
+                    </ul>
+                </div>
+                <div class="roadmap-card reveal" style="transition-delay:0.35s;">
+                    <div class="year">2028</div>
+                    <ul>
+                        <li>Digital Twin immobiliare</li>
+                        <li>Protocollo universale</li>
+                        <li>Espansione EU</li>
+                        <li>BIM Standard</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================================================
+         SLIDE 12: IL MERCATO
+         ====================================================== -->
+    <section class="slide bg-gradient-warm" data-slide="11">
+        <span class="slide-number">11</span>
+        <div class="slide-content centered-content" style="max-width:1000px;margin:0 auto;">
+            <div class="section-label reveal">L'opportunità</div>
+            <div class="accent-line reveal" style="margin-left:auto;margin-right:auto;"></div>
+            <h2 class="reveal" style="margin-bottom:clamp(1.5rem,3vw,3rem);">Un Mercato Enorme</h2>
+
+            <div class="market-circles reveal-scale" style="transition-delay:0.2s;">
+                <div class="market-circle">
+                    <div class="circle large">€12B+</div>
+                    <div class="circle-label">TAM Global</div>
+                </div>
+                <div class="market-circle">
+                    <div class="circle medium">€3.8B+</div>
+                    <div class="circle-label">SAM Europa</div>
+                </div>
+                <div class="market-circle">
+                    <div class="circle small">€25M</div>
+                    <div class="circle-label">SOM Italia</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid two reveal" style="margin-top:clamp(1.5rem,3vw,2.5rem);max-width:500px;">
+                <div style="text-align:center;">
+                    <div style="font-family:var(--font-display);font-weight:800;font-size:clamp(1.2rem,2.5vw,1.8rem);color:var(--mc-purple);">700k</div>
+                    <div style="font-size:var(--small-size);color:var(--text-secondary);">Transazioni/anno in Italia</div>
+                </div>
+                <div style="text-align:center;">
+                    <div style="font-family:var(--font-display);font-weight:800;font-size:clamp(1.2rem,2.5vw,1.8rem);color:var(--mc-orange);">50.000</div>
+                    <div style="font-size:var(--small-size);color:var(--text-secondary);">Agenzie immobiliari</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================================================
+         SLIDE 13: PERCHÉ ORA
+         ====================================================== -->
+    <section class="slide bg-gradient-mesh bg-grid" data-slide="12">
+        <span class="slide-number">12</span>
+        <div class="slide-content centered-content" style="max-width:900px;margin:0 auto;">
+            <div class="section-label reveal">Il momento</div>
+            <div class="accent-line reveal" style="margin-left:auto;margin-right:auto;"></div>
+            <h2 class="reveal" style="margin-bottom:clamp(1.5rem,3vw,2.5rem);">Perché Ora</h2>
+
+            <ul class="styled-list reveal" style="max-width:600px;margin:0 auto;text-align:left;">
+                <li><strong style="color:var(--text-primary);">Traction validata:</strong> +500k ARR, +1.000 clienti paganti, product-market fit dimostrato</li>
+                <li><strong style="color:var(--text-primary);">Il mercato si muove:</strong> l'AI sta ridefinendo ogni settore — chi entra ora vince</li>
+                <li><strong style="color:var(--text-primary);">Unit economics eccellenti:</strong> LTV/CAC >10, margini al 90% — un business solido</li>
+                <li><strong style="color:var(--text-primary);">Window of opportunity:</strong> nessun competitor ha una piattaforma All-In-One in Italia</li>
             </ul>
         </div>
-        <div class="price-card featured">
-            <div class="price-name">Pro</div>
-            <div class="price-amount">€79<span>/mese</span></div>
-            <div class="price-desc">Piccole Agenzie</div>
-            <ul class="price-features">
-                <li>Suite AI completa</li>
-                <li>Video reel + avatar</li>
-                <li>Social ads automation</li>
-                <li>Planimetrie 3D</li>
-                <li>WhatsApp Agent 24/7</li>
+    </section>
+
+    <!-- ======================================================
+         SLIDE 14: L'INVESTIMENTO
+         ====================================================== -->
+    <section class="slide bg-gradient-deep" data-slide="13">
+        <span class="slide-number">13</span>
+        <div class="glow-orb orange" style="width:200px;height:200px;bottom:20%;right:10%;"></div>
+
+        <div class="slide-content centered-content" style="max-width:900px;margin:0 auto;">
+            <div class="section-label reveal">Il prossimo passo</div>
+            <div class="accent-line reveal" style="margin-left:auto;margin-right:auto;"></div>
+            <h2 class="reveal" style="margin-bottom:clamp(1rem,2vw,2rem);">Apriamo un Round di Investimento</h2>
+
+            <div class="highlight-box reveal-scale" style="transition-delay:0.2s;max-width:650px;">
+                <div class="metric-value" style="font-size:clamp(2.5rem,6vw,4.5rem);margin-bottom:clamp(0.5rem,1vw,1rem);">~€1M</div>
+                <p style="font-size:var(--body-size);color:var(--text-secondary);">
+                    Un round pensato per potenziare la nostra tecnologia e accelerare lo sviluppo della piattaforma.
+                </p>
+            </div>
+
+            <p class="reveal" style="margin-top:clamp(1.5rem,3vw,2.5rem);max-width:50ch;font-size:var(--body-size);color:var(--text-secondary);">
+                Abbiamo i numeri, abbiamo il prodotto, abbiamo i clienti.<br>
+                Ora serve <strong style="color:var(--text-primary);">carburante per correre ancora più veloce.</strong>
+            </p>
+        </div>
+    </section>
+
+    <!-- ======================================================
+         SLIDE 15: LA STRUTTURA
+         ====================================================== -->
+    <section class="slide bg-gradient-warm bg-grid" data-slide="14">
+        <span class="slide-number">14</span>
+        <div class="slide-content" style="max-width:1000px;margin:0 auto;">
+            <div class="section-label reveal">Come ci arriviamo</div>
+            <div class="accent-line reveal"></div>
+            <h2 class="reveal" style="margin-bottom:clamp(1.5rem,3vw,2.5rem);">Potenziare il Team</h2>
+
+            <div class="three-col">
+                <div class="feature-card reveal" style="transition-delay:0.15s;">
+                    <div class="feature-icon">⚙️</div>
+                    <h3>Tecnologia</h3>
+                    <p>Potenziare il team engineering per sviluppare le nuove capabilities della piattaforma più velocemente.</p>
+                </div>
+                <div class="feature-card reveal" style="transition-delay:0.25s;">
+                    <div class="feature-icon">📈</div>
+                    <h3>Sales & Growth</h3>
+                    <p>Espandere la nostra capacità commerciale per raggiungere più agenzie in tutta Italia.</p>
+                </div>
+                <div class="feature-card reveal" style="transition-delay:0.35s;">
+                    <div class="feature-icon">🤝</div>
+                    <h3>Customer Success</h3>
+                    <p>Garantire che ogni cliente ottenga il massimo dalla piattaforma. Il loro successo è il nostro.</p>
+                </div>
+            </div>
+
+            <p class="reveal" style="text-align:center;margin-top:clamp(1rem,2vw,2rem);color:var(--text-muted);font-size:var(--small-size);">
+                Crescita sostenibile — ogni ruolo aggiunto ha un impatto diretto sul valore.
+            </p>
+        </div>
+    </section>
+
+    <!-- ======================================================
+         SLIDE 16: OBIETTIVI 2026
+         ====================================================== -->
+    <section class="slide bg-gradient-mesh" data-slide="15">
+        <span class="slide-number">15</span>
+        <div class="slide-content centered-content" style="max-width:900px;margin:0 auto;">
+            <div class="section-label reveal">Target</div>
+            <div class="accent-line reveal" style="margin-left:auto;margin-right:auto;"></div>
+            <h2 class="reveal" style="margin-bottom:clamp(1.5rem,3vw,3rem);">Obiettivi 2026</h2>
+
+            <div class="metrics-grid three reveal-scale" style="transition-delay:0.2s;">
+                <div class="metric-card">
+                    <div class="metric-value" style="font-size:clamp(2rem,5vw,3.5rem);">€1M</div>
+                    <div class="metric-label">ARR Target</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value orange" style="font-size:clamp(2rem,5vw,3.5rem);">2x</div>
+                    <div class="metric-label">Crescita clienti</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" style="font-size:clamp(2rem,5vw,3.5rem);">3</div>
+                    <div class="metric-label">Nuovi prodotti</div>
+                </div>
+            </div>
+
+            <ul class="styled-list reveal" style="margin-top:clamp(1.5rem,3vw,2.5rem);max-width:550px;text-align:left;">
+                <li>Lancio AI Video Suite e Doc-Intelligence avanzata</li>
+                <li>Chiusura round e potenziamento team</li>
+                <li>Consolidamento leadership nel mercato italiano</li>
             </ul>
         </div>
-        <div class="price-card">
-            <div class="price-name">Agency</div>
-            <div class="price-amount">€199<span>/mese</span></div>
-            <div class="price-desc">Team 5+ agenti</div>
-            <ul class="price-features">
-                <li>Multi-seat & Admin</li>
-                <li>Agentic Features</li>
-                <li>Doc Intelligence</li>
-                <li>Reporting avanzato</li>
-                <li>Priority support</li>
-            </ul>
+    </section>
+
+    <!-- ======================================================
+         SLIDE 17: CLOSING
+         ====================================================== -->
+    <section class="slide closing-slide bg-gradient-mesh bg-grid" data-slide="16">
+        <div class="glow-orb purple" style="width:400px;height:400px;top:10%;left:10%;"></div>
+        <div class="glow-orb cyan" style="width:250px;height:250px;bottom:15%;right:10%;"></div>
+        <div class="glow-orb orange" style="width:150px;height:150px;top:50%;right:30%;"></div>
+
+        <div class="slide-content">
+            <div class="logo-text reveal">METACASA</div>
+            <h1 class="reveal" style="margin-top:clamp(1rem,2vw,2rem);max-width:18ch;margin-left:auto;margin-right:auto;">
+                Insieme, stiamo costruendo il futuro del Real Estate
+            </h1>
+            <p class="reveal" style="margin-top:clamp(1rem,2vw,1.5rem);max-width:45ch;font-size:var(--body-size);color:var(--text-secondary);">
+                Ogni risultato che abbiamo raggiunto è merito di questo team.<br>
+                Il meglio deve ancora venire.
+            </p>
+            <div class="title-date reveal" style="margin-top:clamp(1.5rem,3vw,3rem);">Grazie. 💜</div>
         </div>
-        <div class="price-card">
-            <div class="price-name">Enterprise</div>
-            <div class="price-amount">Custom</div>
-            <div class="price-desc">Franchising & Network</div>
-            <ul class="price-features">
-                <li>API Integration</li>
-                <li>SLA dedicato</li>
-                <li>White-label option</li>
-                <li>Onboarding dedicato</li>
-                <li>Custom AI training</li>
-            </ul>
-        </div>
-    </div>
+    </section>
 
-    <div style="text-align: center; margin-top: 2rem; padding: 1rem; background: var(--bg-card); border-radius: 12px; border: 1px solid var(--border);" data-aos="fade-up">
-        <p style="font-size: 0.9rem; color: var(--text-secondary);">
-            <strong style="color: var(--accent);">Pay-per-Use:</strong>
-            Pacchetti "chiavi in mano" da €49/immobile — Listing Pack (€49) | Full Agency (€149) | Premium (€299)
-        </p>
-    </div>
-</section>
+    <!-- ===========================================
+         JAVASCRIPT — SLIDE CONTROLLER
+         =========================================== -->
+    <script>
+        class SlidePresentation {
+            constructor() {
+                this.slides = document.querySelectorAll('.slide');
+                this.currentSlide = 0;
+                this.isScrolling = false;
 
-<div class="section-divider"></div>
+                this.setupIntersectionObserver();
+                this.setupKeyboardNav();
+                this.setupTouchNav();
+                this.setupWheelNav();
+                this.setupProgressBar();
+                this.setupNavDots();
+                this.setupCounterAnimations();
+            }
 
-<!-- SECTION 11: MARKET SIZE -->
-<section>
-    <div class="section-label" data-aos="fade-up">Opportunità di Mercato</div>
-    <h2 class="section-title" data-aos="fade-up">
-        Un mercato da €100B+.<br>Focus Europa, partendo dall'Italia.
-    </h2>
+            /* --- Intersection Observer: trigger .visible class --- */
+            setupIntersectionObserver() {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            const idx = Array.from(this.slides).indexOf(entry.target);
+                            if (idx !== -1) {
+                                this.currentSlide = idx;
+                                this.updateNavDots();
+                                this.updateProgressBar();
+                                this.triggerCounters(entry.target);
+                            }
+                        }
+                    });
+                }, { threshold: 0.5 });
 
-    <div class="tam-visual">
-        <div class="tam-circles" data-aos="fade-right">
-            <div class="tam-circle tam">
-                <div class="circle-val">€100B+</div>
-                <div class="circle-label">TAM Global</div>
-            </div>
-            <div class="tam-circle sam">
-                <div class="circle-val">€1.5B</div>
-                <div class="circle-label">SAM Europa</div>
-            </div>
-            <div class="tam-circle som">
-                <div class="circle-val">€50M</div>
-                <div class="circle-label">SOM Italia</div>
-            </div>
-        </div>
+                this.slides.forEach(slide => observer.observe(slide));
+            }
 
-        <div class="tam-details" data-aos="fade-left">
-            <div class="tam-item">
-                <h4>🇮🇹 Italia — Focus Attuale</h4>
-                <p>15.200 agenzie, 45.000+ professionisti, 750k+ transazioni/anno. Target: 10% penetrazione.</p>
-            </div>
-            <div class="tam-item">
-                <h4>🇪🇺 Europa — Espansione 2027-2028</h4>
-                <p>3.5M transazioni/anno. Spagna, Francia e Germania — mercati frammentati simili all'Italia.</p>
-            </div>
-            <div class="tam-item">
-                <h4>🌍 Global — Visione Long-term</h4>
-                <p>Mercato software RE in crescita trainata dall'AI. PropTech EU: $50.7B entro 2033 (CAGR 18.75%).</p>
-            </div>
-        </div>
-    </div>
-</section>
+            /* --- Keyboard Navigation --- */
+            setupKeyboardNav() {
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+                        e.preventDefault();
+                        this.goToSlide(this.currentSlide + 1);
+                    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                        e.preventDefault();
+                        this.goToSlide(this.currentSlide - 1);
+                    } else if (e.key === 'Home') {
+                        e.preventDefault();
+                        this.goToSlide(0);
+                    } else if (e.key === 'End') {
+                        e.preventDefault();
+                        this.goToSlide(this.slides.length - 1);
+                    }
+                });
+            }
 
-<div class="section-divider"></div>
+            /* --- Touch/Swipe Navigation --- */
+            setupTouchNav() {
+                let startY = 0;
+                document.addEventListener('touchstart', (e) => {
+                    startY = e.touches[0].clientY;
+                }, { passive: true });
 
-<!-- SECTION 12: ROADMAP -->
-<section>
-    <div class="section-label" data-aos="fade-up">Roadmap</div>
-    <h2 class="section-title" data-aos="fade-up">
-        Da €1M a €50M ARR.<br>In 4 anni.
-    </h2>
+                document.addEventListener('touchend', (e) => {
+                    const diff = startY - e.changedTouches[0].clientY;
+                    if (Math.abs(diff) > 50) {
+                        if (diff > 0) this.goToSlide(this.currentSlide + 1);
+                        else this.goToSlide(this.currentSlide - 1);
+                    }
+                }, { passive: true });
+            }
 
-    <div class="roadmap">
-        <div class="road-card" data-aos="fade-up" data-aos-delay="0">
-            <div class="road-year">2026</div>
-            <div class="road-arr">€1M</div>
-            <ul>
-                <li>Scale-up Italia</li>
-                <li>Agentic Video Suite</li>
-                <li>Voice & WhatsApp AI</li>
-                <li>Seed Round Close</li>
-            </ul>
-        </div>
-        <div class="road-card" data-aos="fade-up" data-aos-delay="100">
-            <div class="road-year">2027</div>
-            <div class="road-arr">€8M</div>
-            <ul>
-                <li>Espansione Spagna & Francia</li>
-                <li>Full Doc-Intelligence</li>
-                <li>Serie A Funding</li>
-                <li>BIM v1 Launch</li>
-            </ul>
-        </div>
-        <div class="road-card" data-aos="fade-up" data-aos-delay="200">
-            <div class="road-year">2028</div>
-            <div class="road-arr">€25M</div>
-            <ul>
-                <li>Espansione Germania</li>
-                <li>Standard BIM Immobiliare</li>
-                <li>Autonomous Broker Agents</li>
-                <li>Market Leadership EU</li>
-            </ul>
-        </div>
-        <div class="road-card" data-aos="fade-up" data-aos-delay="300">
-            <div class="road-year">2029</div>
-            <div class="road-arr">€50M</div>
-            <ul>
-                <li>Market Leadership EU</li>
-                <li>Ecosystem Integration</li>
-                <li>Exit Ready / IPO Path</li>
-                <li>CAGR ~160%</li>
-            </ul>
-        </div>
-    </div>
-</section>
+            /* --- Mouse Wheel Navigation --- */
+            setupWheelNav() {
+                let lastWheel = 0;
+                document.addEventListener('wheel', (e) => {
+                    const now = Date.now();
+                    if (now - lastWheel < 800) return;
+                    lastWheel = now;
 
-<div class="section-divider"></div>
+                    if (e.deltaY > 30) this.goToSlide(this.currentSlide + 1);
+                    else if (e.deltaY < -30) this.goToSlide(this.currentSlide - 1);
+                }, { passive: true });
+            }
 
-<!-- SECTION 13: TEAM -->
-<section id="team">
-    <div class="section-label" data-aos="fade-up">Il Team</div>
-    <h2 class="section-title" data-aos="fade-up">
-        Real Estate + AI + Operations.<br>Il mix che mancava.
-    </h2>
+            /* --- Go to specific slide --- */
+            goToSlide(index) {
+                if (index < 0 || index >= this.slides.length) return;
+                this.currentSlide = index;
+                this.slides[index].scrollIntoView({ behavior: 'smooth' });
+            }
 
-    <div class="team-grid">
-        <div class="team-card" data-aos="fade-up" data-aos-delay="0">
-            <div class="team-avatar">SG</div>
-            <h3>Sacha Gentili</h3>
-            <div class="role">CEO & Founder</div>
-            <p>Ex-Manager PropTech con 10+ anni nel Real Estate. Visionario del prodotto e sales leader.</p>
-        </div>
-        <div class="team-card" data-aos="fade-up" data-aos-delay="100">
-            <div class="team-avatar">JR</div>
-            <h3>Juxhim Radhima</h3>
-            <div class="role">CTO & Co-Founder</div>
-            <p>Senior AI Engineer specializzato in LLM e Agentic Workflows. Architetto della piattaforma.</p>
-        </div>
-        <div class="team-card" data-aos="fade-up" data-aos-delay="200">
-            <div class="team-avatar">DS</div>
-            <h3>Daniele Scaglia</h3>
-            <div class="role">COO & Co-Founder</div>
-            <p>Esperto di processi B2B e Operations. Ha scalato team operativi da 0 a 50 persone.</p>
-        </div>
-    </div>
+            /* --- Progress Bar --- */
+            setupProgressBar() {
+                this.progressBar = document.getElementById('progressBar');
+                this.updateProgressBar();
+            }
 
-    <div style="text-align: center; margin-top: 2rem;" data-aos="fade-up">
-        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">Advisory Board</p>
-        <div class="advisors">
-            <div class="advisor">
-                <div class="adv-avatar">EZ</div>
-                <div class="adv-name">Edoardo Zita</div>
-                <div class="adv-role">Strategy Advisor</div>
-            </div>
-            <div class="advisor">
-                <div class="adv-avatar">FM</div>
-                <div class="adv-name">Francesco Meani</div>
-                <div class="adv-role">Tech Advisor</div>
-            </div>
-            <div class="advisor">
-                <div class="adv-avatar">MC</div>
-                <div class="adv-name">Marco Caradonna</div>
-                <div class="adv-role">Growth Advisor</div>
-            </div>
-        </div>
-    </div>
-</section>
+            updateProgressBar() {
+                if (!this.progressBar) return;
+                const progress = ((this.currentSlide + 1) / this.slides.length) * 100;
+                this.progressBar.style.width = progress + '%';
+            }
 
-<div class="section-divider"></div>
+            /* --- Navigation Dots --- */
+            setupNavDots() {
+                const nav = document.getElementById('navDots');
+                if (!nav) return;
+                this.slides.forEach((_, i) => {
+                    const dot = document.createElement('button');
+                    dot.classList.add('nav-dot');
+                    dot.setAttribute('aria-label', `Slide ${i + 1}`);
+                    if (i === 0) dot.classList.add('active');
+                    dot.addEventListener('click', () => this.goToSlide(i));
+                    nav.appendChild(dot);
+                });
+                this.dots = nav.querySelectorAll('.nav-dot');
+            }
 
-<!-- SECTION 14: THE ASK -->
-<section class="ask-section" id="ask">
-    <div class="ask-content">
-        <div class="section-label" data-aos="fade-up">Investment Opportunity</div>
-        <h2 class="section-title" data-aos="fade-up" style="margin: 0 auto 1rem;">
-            Ridefinisci con noi il Real Estate<br>europeo.
-        </h2>
-        <p class="section-subtitle" style="margin: 0 auto;" data-aos="fade-up">
-            Seed Round aperto. Entra nel sistema operativo che cambierà il modo
-            in cui 15.000+ agenzie lavorano ogni giorno.
-        </p>
+            updateNavDots() {
+                if (!this.dots) return;
+                this.dots.forEach((dot, i) => {
+                    dot.classList.toggle('active', i === this.currentSlide);
+                });
+            }
 
-        <div class="ask-grid" data-aos="fade-up">
-            <div class="ask-item">
-                <div class="ask-val">€1.5M</div>
-                <div class="ask-label">Seed Round</div>
-            </div>
-            <div class="ask-item">
-                <div class="ask-val">€8.5M</div>
-                <div class="ask-label">Pre-Money</div>
-            </div>
-            <div class="ask-item">
-                <div class="ask-val">Q3 2026</div>
-                <div class="ask-label">Target Close</div>
-            </div>
-            <div class="ask-item">
-                <div class="ask-val">3x YoY</div>
-                <div class="ask-label">Crescita</div>
-            </div>
-        </div>
+            /* --- Counter Animations --- */
+            setupCounterAnimations() {
+                this.countersTriggered = new Set();
+            }
 
-        <div class="fund-bars" data-aos="fade-up">
-            <div class="fund-bar">
-                <span class="dot" style="background: var(--accent);"></span>
-                <span>40% Prodotto & R&D</span>
-            </div>
-            <div class="fund-bar">
-                <span class="dot" style="background: #3b82f6;"></span>
-                <span>30% Sales & Marketing</span>
-            </div>
-            <div class="fund-bar">
-                <span class="dot" style="background: #8b5cf6;"></span>
-                <span>20% Ops & CS</span>
-            </div>
-            <div class="fund-bar">
-                <span class="dot" style="background: #6b7280;"></span>
-                <span>10% Legal & GDPR</span>
-            </div>
-        </div>
+            triggerCounters(slide) {
+                if (this.countersTriggered.has(slide)) return;
 
-        <a href="mailto:invest@metacasa.ai" class="final-cta" data-aos="fade-up">
-            Parliamone → invest@metacasa.ai
-        </a>
-    </div>
-</section>
+                const counters = slide.querySelectorAll('.counter');
+                if (counters.length === 0) return;
 
-<!-- Footer -->
-<footer>
-    <p>MetaCasa &copy; 2026 — Il Sistema Operativo per il Real Estate.</p>
-    <p style="margin-top: 0.5rem;"><a href="https://metacasa.ai">metacasa.ai</a></p>
-</footer>
+                this.countersTriggered.add(slide);
 
-<!-- AOS Animation Library -->
-<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
-<script>
-    AOS.init({
-        duration: 600,
-        once: true,
-        offset: 50,
-        disable: window.innerWidth < 768
-    });
-    // Trigger initial animations after short delay
-    setTimeout(() => { window.dispatchEvent(new Event('scroll')); }, 100);
-</script>
+                counters.forEach(counter => {
+                    const target = parseInt(counter.dataset.target);
+                    const prefix = counter.dataset.prefix || '';
+                    const suffix = counter.dataset.suffix || '';
+                    const duration = 1500;
+                    const startTime = performance.now();
 
+                    const animate = (currentTime) => {
+                        const elapsed = currentTime - startTime;
+                        const progress = Math.min(elapsed / duration, 1);
+                        const eased = 1 - Math.pow(1 - progress, 3);
+                        const current = Math.round(eased * target);
+
+                        counter.textContent = prefix + current.toLocaleString('it-IT') + suffix;
+
+                        if (progress < 1) requestAnimationFrame(animate);
+                    };
+
+                    requestAnimationFrame(animate);
+                });
+            }
+        }
+
+        /* Initialize when DOM is ready */
+        document.addEventListener('DOMContentLoaded', () => {
+            new SlidePresentation();
+        });
+    </script>
 </body>
 </html>
