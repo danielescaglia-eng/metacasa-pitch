@@ -1,0 +1,2059 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MetaCasa — Il Sistema Operativo per il Real Estate</title>
+    <meta name="description" content="MetaCasa: l'OS agentico che trasforma ogni agenzia immobiliare. Dall'acquisizione alla vendita, tutto automatizzato.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a2e;
+            --bg-card-hover: #222240;
+            --accent: #ff6b2b;
+            --accent-light: #ff8f5e;
+            --accent-glow: rgba(255, 107, 43, 0.15);
+            --text-primary: #f0f0f5;
+            --text-secondary: #a0a0b8;
+            --text-muted: #6b6b80;
+            --border: #2a2a3e;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --gradient-1: linear-gradient(135deg, #ff6b2b 0%, #ff3d7f 100%);
+            --gradient-2: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 1rem 2rem;
+            background: rgba(10, 10, 15, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 107, 43, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+        .logo span { color: var(--accent); }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--accent); }
+
+        .nav-cta {
+            background: var(--accent);
+            color: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .nav-cta:hover { background: var(--accent-light); transform: translateY(-1px); }
+
+        /* Sections */
+        section {
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -1px;
+        }
+
+        .section-subtitle {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            line-height: 1.7;
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding-top: 5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 50% 50%, var(--accent-glow) 0%, transparent 50%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.1); }
+        }
+
+        .hero-content { position: relative; z-index: 1; }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 107, 43, 0.1);
+            border: 1px solid rgba(255, 107, 43, 0.3);
+            padding: 0.4rem 1rem;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 2rem;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 900;
+            line-height: 1.05;
+            letter-spacing: -2px;
+            margin-bottom: 1.5rem;
+            max-width: 900px;
+        }
+
+        .hero h1 .highlight {
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 3rem;
+            justify-content: center;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat .number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--accent);
+            line-height: 1;
+        }
+
+        .hero-stat .label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.3rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .hero-p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 650px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 2.5rem;
+            background: var(--accent);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 30px rgba(255, 107, 43, 0.3);
+        }
+        .hero-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 40px rgba(255, 107, 43, 0.4); }
+
+        /* Pain section */
+        .pain-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .pain-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+        .pain-card:hover { border-color: var(--danger); background: var(--bg-card-hover); }
+
+        .pain-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .pain-card h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .pain-card p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .pain-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--danger);
+            margin-bottom: 0.3rem;
+        }
+
+        /* Solution */
+        .solution-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin: 3rem 0;
+            flex-wrap: wrap;
+        }
+
+        .flow-step {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem 2rem;
+            text-align: center;
+            min-width: 200px;
+            flex: 1;
+        }
+        .flow-step.active {
+            border-color: var(--accent);
+            background: rgba(255, 107, 43, 0.08);
+        }
+
+        .flow-arrow {
+            font-size: 1.5rem;
+            color: var(--accent);
+        }
+
+        .pillars {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .pillar {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .pillar:hover { border-color: var(--accent); transform: translateY(-4px); }
+
+        .pillar-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+        .pillar h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--accent); }
+        .pillar p { font-size: 0.85rem; color: var(--text-secondary); }
+
+        /* Workflow Comparison */
+        .workflow-compare {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .workflow-col {
+            border-radius: 20px;
+            padding: 2.5rem;
+            position: relative;
+        }
+
+        .workflow-col.traditional {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, rgba(239, 68, 68, 0.02) 100%);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .workflow-col.metacasa {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.08) 0%, rgba(34, 197, 94, 0.02) 100%);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+
+        .workflow-header {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 2rem;
+        }
+
+        .workflow-header .tag {
+            padding: 0.3rem 0.8rem;
+            border-radius: 100px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .traditional .tag { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
+        .metacasa .tag { background: rgba(34, 197, 94, 0.15); color: var(--success); }
+
+        .workflow-header h3 { font-size: 1.3rem; font-weight: 700; }
+
+        .workflow-steps {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .workflow-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .step-num {
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+        .traditional .step-num { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
+        .metacasa .step-num { background: rgba(34, 197, 94, 0.15); color: var(--success); }
+
+        .workflow-bottom {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .workflow-metric {
+            text-align: center;
+        }
+
+        .workflow-metric .val {
+            font-size: 1.8rem;
+            font-weight: 800;
+        }
+        .traditional .val { color: var(--danger); }
+        .metacasa .val { color: var(--success); }
+
+        .workflow-metric .desc {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Capabilities Grid */
+        .cap-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin-top: 3rem;
+        }
+
+        .cap-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            transition: all 0.3s;
+        }
+        .cap-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+        .cap-icon {
+            font-size: 1.5rem;
+            min-width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--accent-glow);
+            border-radius: 10px;
+        }
+
+        .cap-card h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.3rem; }
+        .cap-card p { font-size: 0.8rem; color: var(--text-muted); }
+
+        /* BIM Section */
+        .bim-visual {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 3rem;
+            align-items: center;
+        }
+
+        .bim-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .bim-step {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.2rem 1.5rem;
+            transition: all 0.3s;
+        }
+        .bim-step:hover { border-color: var(--accent); }
+        .bim-step .num {
+            width: 36px;
+            height: 36px;
+            min-width: 36px;
+            border-radius: 50%;
+            background: var(--accent-glow);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+
+        .bim-info {
+            background: linear-gradient(135deg, rgba(255, 107, 43, 0.08) 0%, rgba(255, 61, 127, 0.05) 100%);
+            border: 1px solid rgba(255, 107, 43, 0.2);
+            border-radius: 20px;
+            padding: 2.5rem;
+        }
+
+        .bim-info h3 { font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; }
+        .bim-info p { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.7; }
+
+        /* Traction / Numbers */
+        .traction-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .traction-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .traction-card:hover { border-color: var(--accent); }
+
+        .traction-number {
+            font-size: 2.8rem;
+            font-weight: 900;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+        }
+
+        .traction-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        .traction-sub {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 0.3rem;
+        }
+
+        /* Competitor Table */
+        .comp-table-wrap {
+            overflow-x: auto;
+            margin-top: 3rem;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+        }
+
+        .comp-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        .comp-table th {
+            background: var(--bg-card);
+            padding: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+        .comp-table th:first-child { text-align: left; }
+        .comp-table th.mc { color: var(--accent); background: rgba(255, 107, 43, 0.08); }
+
+        .comp-table td {
+            padding: 0.8rem 1rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(42, 42, 62, 0.5);
+            white-space: nowrap;
+        }
+        .comp-table td:first-child { text-align: left; font-weight: 500; }
+        .comp-table td.mc { background: rgba(255, 107, 43, 0.04); }
+
+        .comp-table tr:hover td { background: rgba(255, 255, 255, 0.02); }
+        .comp-table tr:hover td.mc { background: rgba(255, 107, 43, 0.08); }
+
+        .check { color: var(--success); font-weight: 700; }
+        .cross { color: var(--text-muted); }
+        .partial { color: var(--warning); }
+
+        .comp-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .comp-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+        .comp-card h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .comp-card .tag-small {
+            font-size: 0.65rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-muted);
+            margin-left: 0.5rem;
+        }
+        .comp-card p { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5; }
+
+        /* Pricing */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .price-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+        }
+        .price-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+
+        .price-card.featured {
+            border-color: var(--accent);
+            background: linear-gradient(135deg, rgba(255, 107, 43, 0.1) 0%, var(--bg-card) 100%);
+        }
+
+        .price-card.featured::before {
+            content: 'Best Value';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent);
+            color: white;
+            padding: 0.2rem 0.8rem;
+            border-radius: 100px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        .price-name { font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; }
+        .price-amount { font-size: 2.5rem; font-weight: 800; margin: 0.5rem 0; }
+        .price-amount span { font-size: 0.9rem; color: var(--text-muted); font-weight: 400; }
+        .price-desc { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+
+        .price-features {
+            list-style: none;
+            text-align: left;
+        }
+        .price-features li {
+            padding: 0.4rem 0;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .price-features li::before { content: '✓'; color: var(--accent); font-weight: 700; }
+
+        /* Market Size */
+        .tam-visual {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .tam-circles {
+            position: relative;
+            width: 400px;
+            height: 400px;
+        }
+
+        .tam-circle {
+            position: absolute;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tam-circle.tam {
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 107, 43, 0.05);
+            border: 1px solid rgba(255, 107, 43, 0.15);
+            top: 0;
+            left: 0;
+        }
+
+        .tam-circle.sam {
+            width: 260px;
+            height: 260px;
+            background: rgba(255, 107, 43, 0.1);
+            border: 1px solid rgba(255, 107, 43, 0.25);
+            top: 70px;
+            left: 70px;
+        }
+
+        .tam-circle.som {
+            width: 140px;
+            height: 140px;
+            background: rgba(255, 107, 43, 0.2);
+            border: 2px solid var(--accent);
+            top: 130px;
+            left: 130px;
+        }
+
+        .tam-circle .circle-val {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--accent);
+        }
+        .tam-circle .circle-label {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .tam-details {
+            max-width: 400px;
+        }
+
+        .tam-item {
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .tam-item:last-child { border: none; }
+        .tam-item h4 { font-size: 1rem; font-weight: 600; margin-bottom: 0.3rem; }
+        .tam-item p { font-size: 0.85rem; color: var(--text-secondary); }
+
+        /* Roadmap */
+        .roadmap {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-top: 3rem;
+            position: relative;
+        }
+
+        .roadmap::before {
+            content: '';
+            position: absolute;
+            top: 35px;
+            left: 10%;
+            right: 10%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+        }
+
+        .road-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .road-year {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--bg-primary);
+            border: 2px solid var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: -3.5rem auto 1rem;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--accent);
+        }
+
+        .road-arr {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .road-card ul {
+            list-style: none;
+            text-align: left;
+        }
+        .road-card ul li {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            padding: 0.3rem 0;
+            padding-left: 1rem;
+            position: relative;
+        }
+        .road-card ul li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+        }
+
+        /* Team */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .team-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .team-card:hover { border-color: var(--accent); }
+
+        .team-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--gradient-1);
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 800;
+            color: white;
+        }
+
+        .team-card h3 { font-size: 1.1rem; font-weight: 700; }
+        .team-card .role { font-size: 0.85rem; color: var(--accent); font-weight: 600; margin-bottom: 0.5rem; }
+        .team-card p { font-size: 0.8rem; color: var(--text-secondary); }
+
+        .advisors {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+
+        .advisor {
+            text-align: center;
+        }
+        .advisor .adv-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.5rem;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--accent);
+        }
+        .advisor .adv-name { font-size: 0.8rem; font-weight: 600; }
+        .advisor .adv-role { font-size: 0.7rem; color: var(--text-muted); }
+
+        /* Ask / CTA Final */
+        .ask-section {
+            text-align: center;
+            padding: 8rem 2rem;
+            position: relative;
+        }
+
+        .ask-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 80%, var(--accent-glow) 0%, transparent 60%);
+        }
+
+        .ask-content { position: relative; z-index: 1; }
+
+        .ask-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin: 3rem auto;
+            max-width: 800px;
+        }
+
+        .ask-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        .ask-item .ask-val { font-size: 1.3rem; font-weight: 800; color: var(--accent); }
+        .ask-item .ask-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 0.3rem; }
+
+        .fund-bars {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .fund-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+        }
+        .fund-bar .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .final-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 3rem;
+            background: var(--gradient-1);
+            color: white;
+            padding: 1.2rem 3rem;
+            border-radius: 14px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            box-shadow: 0 8px 40px rgba(255, 107, 43, 0.3);
+        }
+        .final-cta:hover { transform: translateY(-3px); box-shadow: 0 12px 50px rgba(255, 107, 43, 0.45); }
+
+        /* Dividers */
+        .section-divider {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border), transparent);
+        }
+
+        /* Unit Economics */
+        .ue-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .ue-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .ue-val {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--accent);
+            min-width: 100px;
+            text-align: center;
+        }
+        .ue-info h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.3rem; }
+        .ue-info p { font-size: 0.8rem; color: var(--text-secondary); }
+
+        /* Automation */
+        .auto-visual {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .auto-ring {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 12px solid var(--border);
+            border-top-color: var(--accent);
+            border-right-color: var(--accent);
+            border-bottom-color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .auto-ring .ring-val { font-size: 2.5rem; font-weight: 900; color: var(--accent); }
+        .auto-ring .ring-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+
+        .auto-benefits { max-width: 500px; }
+        .auto-benefit {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem 0;
+        }
+        .auto-benefit .ab-icon {
+            width: 36px;
+            height: 36px;
+            min-width: 36px;
+            border-radius: 10px;
+            background: var(--accent-glow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+        .auto-benefit h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.2rem; }
+        .auto-benefit p { font-size: 0.8rem; color: var(--text-secondary); }
+
+        /* Full width sections */
+        .full-width {
+            max-width: 100%;
+            background: var(--bg-secondary);
+        }
+        .full-width .inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 6rem 2rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border);
+        }
+        footer a { color: var(--accent); text-decoration: none; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            section { padding: 4rem 1.5rem; }
+            .workflow-compare { grid-template-columns: 1fr; }
+            .pillars { grid-template-columns: 1fr; }
+            .pricing-grid { grid-template-columns: repeat(2, 1fr); }
+            .traction-grid { grid-template-columns: repeat(2, 1fr); }
+            .roadmap { grid-template-columns: repeat(2, 1fr); }
+            .roadmap::before { display: none; }
+            .team-grid { grid-template-columns: 1fr; }
+            .tam-visual { flex-direction: column; }
+            .tam-circles { width: 280px; height: 280px; }
+            .tam-circle.tam { width: 280px; height: 280px; }
+            .tam-circle.sam { width: 180px; height: 180px; top: 50px; left: 50px; }
+            .tam-circle.som { width: 100px; height: 100px; top: 90px; left: 90px; }
+            .bim-visual { grid-template-columns: 1fr; }
+            .ask-grid { grid-template-columns: repeat(2, 1fr); }
+            .ue-grid { grid-template-columns: 1fr; }
+            .auto-visual { flex-direction: column; }
+            .hero h1 { font-size: 2.2rem; }
+            .hero-stats { gap: 1.5rem; }
+            .advisors { flex-direction: column; align-items: center; gap: 1.5rem; }
+        }
+
+        @media (max-width: 480px) {
+            .pricing-grid { grid-template-columns: 1fr; }
+            .traction-grid { grid-template-columns: 1fr; }
+            .roadmap { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav>
+    <div class="logo">META<span>CASA</span></div>
+    <ul class="nav-links">
+        <li><a href="#problema">Problema</a></li>
+        <li><a href="#soluzione">Soluzione</a></li>
+        <li><a href="#workflow">Workflow</a></li>
+        <li><a href="#competitor">Competitor</a></li>
+        <li><a href="#numeri">Numeri</a></li>
+        <li><a href="#team">Team</a></li>
+    </ul>
+    <a href="#ask" class="nav-cta">Seed Round Aperto →</a>
+</nav>
+
+<!-- SECTION 1: HERO -->
+<section class="hero">
+    <div class="hero-content">
+        <div class="hero-badge" data-aos="fade-down">
+            ⚡ Seed Round Aperto — Target €1.5M
+        </div>
+
+        <h1 data-aos="fade-up" data-aos-delay="100">
+            Vendere casa non dovrebbe<br><span class="highlight">essere un incubo.</span>
+        </h1>
+
+        <p class="hero-p" data-aos="fade-up" data-aos-delay="200">
+            Il mercato immobiliare italiano vale €120 miliardi. Ma il servizio delle agenzie
+            è rimasto fermo agli anni '90: lento, opaco, inefficiente. Noi lo stiamo riscrivendo da zero.
+        </p>
+
+        <a href="#soluzione" class="hero-cta" data-aos="fade-up" data-aos-delay="300">
+            Scopri MetaCasa OS →
+        </a>
+
+        <div class="hero-stats" data-aos="fade-up" data-aos-delay="400">
+            <div class="hero-stat">
+                <div class="number">€400k+</div>
+                <div class="label">ARR</div>
+            </div>
+            <div class="hero-stat">
+                <div class="number">1.200+</div>
+                <div class="label">Agenzie Attive</div>
+            </div>
+            <div class="hero-stat">
+                <div class="number">3x</div>
+                <div class="label">Crescita YoY</div>
+            </div>
+            <div class="hero-stat">
+                <div class="number">30k+</div>
+                <div class="label">Immobili Processati</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SECTION 2: IL PROBLEMA -->
+<section id="problema">
+    <div class="section-label" data-aos="fade-up">Il Problema</div>
+    <h2 class="section-title" data-aos="fade-up">
+        L'agenzia immobiliare<br>è strutturalmente rotta.
+    </h2>
+    <p class="section-subtitle" data-aos="fade-up">
+        Commissioni del 3-4% per un servizio che nella maggior parte dei casi è lento,
+        disorganizzato e poco trasparente. Anche le agenzie di maggior rilievo non sanno
+        fare questo lavoro realmente. Il valore percepito è vicino allo zero.
+    </p>
+
+    <div class="pain-grid">
+        <div class="pain-card" data-aos="fade-up" data-aos-delay="0">
+            <div class="pain-number">15-20h</div>
+            <h3>Perse ogni settimana</h3>
+            <p>Ogni agente spreca 15-20 ore a settimana in burocrazia, data entry, coordinamento fornitori. Tempo che dovrebbe dedicare a vendere.</p>
+        </div>
+        <div class="pain-card" data-aos="fade-up" data-aos-delay="100">
+            <div class="pain-number">10+</div>
+            <h3>Fornitori per 1 casa</h3>
+            <p>Fotografo, videomaker, geometra, copywriter, social media manager, agenzia ads, home stager... Caos totale.</p>
+        </div>
+        <div class="pain-card" data-aos="fade-up" data-aos-delay="200">
+            <div class="pain-number">80%</div>
+            <h3>Lead persi</h3>
+            <p>Se non rispondi entro 1 ora, la probabilità di chiusura crolla drasticamente. La maggior parte delle agenzie risponde dopo giorni.</p>
+        </div>
+        <div class="pain-card" data-aos="fade-up" data-aos-delay="300">
+            <div class="pain-number">€1.000+</div>
+            <h3>Costo per immobile</h3>
+            <p>Il costo medio per confezionare e promuovere un singolo immobile supera i €1.000. E la qualità? Disomogenea nella migliore delle ipotesi.</p>
+        </div>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SECTION 3: LA SOLUZIONE -->
+<section id="soluzione">
+    <div class="section-label" data-aos="fade-up">La Soluzione</div>
+    <h2 class="section-title" data-aos="fade-up">
+        Non un altro tool AI.<br>
+        <span style="color: var(--accent)">Il sistema operativo</span> per il Real Estate.
+    </h2>
+    <p class="section-subtitle" data-aos="fade-up">
+        MetaCasa orchestra l'intero ciclo immobiliare in automatico: dall'acquisizione alla vendita.
+        Lasciamo all'agente solo ciò che conta davvero — appuntamenti e negoziazione.
+        Tutto il resto lo facciamo noi.
+    </p>
+
+    <div class="solution-flow" data-aos="fade-up" data-aos-delay="100">
+        <div class="flow-step">
+            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📱</div>
+            <strong>Upload</strong>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.3rem;">Foto smartphone + planimetria + documenti</p>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step active">
+            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🤖</div>
+            <strong>MetaCasa Engine</strong>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.3rem;">Agentic AI Orchestra</p>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🚀</div>
+            <strong>Risultati</strong>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.3rem;">Listing, Video, Docs, Campagne — tutto pronto</p>
+        </div>
+    </div>
+
+    <div class="pillars" data-aos="fade-up" data-aos-delay="200">
+        <div class="pillar">
+            <div class="pillar-icon">🎨</div>
+            <h3>Contenuti</h3>
+            <p>Visual & Creative AI — Virtual staging, foto HD, video reel, planimetrie 3D, virtual tour, avatar AI</p>
+        </div>
+        <div class="pillar">
+            <div class="pillar-icon">📈</div>
+            <h3>Marketing</h3>
+            <p>Growth & Automation — Annunci SEO, pubblicazione portali, social ads Meta/Google, WhatsApp 24/7</p>
+        </div>
+        <div class="pillar">
+            <div class="pillar-icon">⚙️</div>
+            <h3>Operations</h3>
+            <p>Back-office AI — OCR documenti 99%, checklist conformità, data room, analisi ROI ristrutturazione</p>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 3rem; padding: 1.5rem; background: var(--bg-card); border-radius: 12px; border: 1px solid var(--border);" data-aos="fade-up">
+        <p style="font-size: 1rem; color: var(--text-secondary);">
+            <strong style="color: var(--accent);">RaaS — Result as a Service.</strong>
+            Non vendiamo software da imparare. Vendiamo risultati pronti all'uso.
+            L'agente carica, MetaCasa consegna. Fine.
+        </p>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SECTION 4: WORKFLOW COMPARISON -->
+<section id="workflow">
+    <div class="section-label" data-aos="fade-up">Workflow</div>
+    <h2 class="section-title" data-aos="fade-up">
+        Agenzia Tradizionale vs.<br>Agenzia con <span style="color: var(--accent)">MetaCasa</span>
+    </h2>
+
+    <div class="workflow-compare">
+        <div class="workflow-col traditional" data-aos="fade-right">
+            <div class="workflow-header">
+                <span class="tag">Tradizionale</span>
+                <h3>15-20 giorni</h3>
+            </div>
+            <ul class="workflow-steps">
+                <li class="workflow-step">
+                    <span class="step-num">1</span>
+                    <span>Acquisizione incarico e sopralluogo</span>
+                </li>
+                <li class="workflow-step">
+                    <span class="step-num">2</span>
+                    <span>Chiamare fotografo professionista (2-3 giorni di attesa)</span>
+                </li>
+                <li class="workflow-step">
+                    <span class="step-num">3</span>
+                    <span>Contattare geometra per planimetrie (3-5 giorni)</span>
+                </li>
+                <li class="workflow-step">
+                    <span class="step-num">4</span>
+                    <span>Scrivere annuncio manualmente (1 giorno)</span>
+                </li>
+                <li class="workflow-step">
+                    <span class="step-num">5</span>
+                    <span>Pubblicare su ogni portale uno per uno (1 giorno)</span>
+                </li>
+                <li class="workflow-step">
+                    <span class="step-num">6</span>
+                    <span>Ingaggiare agenzia social/videomaker (5+ giorni)</span>
+                </li>
+                <li class="workflow-step">
+                    <span class="step-num">7</span>
+                    <span>Gestire lead manualmente — risposte dopo ore/giorni</span>
+                </li>
+                <li class="workflow-step">
+                    <span class="step-num">8</span>
+                    <span>Documentazione frammentata tra email, WhatsApp, carta</span>
+                </li>
+            </ul>
+            <div class="workflow-bottom">
+                <div class="workflow-metric">
+                    <div class="val">€1.000+</div>
+                    <div class="desc">Costo / immobile</div>
+                </div>
+                <div class="workflow-metric">
+                    <div class="val">15-20gg</div>
+                    <div class="desc">Time to market</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="workflow-col metacasa" data-aos="fade-left">
+            <div class="workflow-header">
+                <span class="tag">Con MetaCasa</span>
+                <h3>< 24 ore</h3>
+            </div>
+            <ul class="workflow-steps">
+                <li class="workflow-step">
+                    <span class="step-num">1</span>
+                    <span>Upload foto smartphone + planimetria catastale</span>
+                </li>
+                <li class="workflow-step">
+                    <span class="step-num">2</span>
+                    <span>AI genera foto HD, virtual staging, enhancement automatico</span>
+                </li>
+                <li class="workflow-step">
+                    <span class="step-num">3</span>
+                    <span>Video reel, avatar AI, virtual tour generati in minuti</span>
+                </li>
+                <li class="workflow-step">
+                    <span class="step-num">4</span>
+                    <span>Planimetrie 2D/3D arredate e quotate automatiche</span>
+                </li>
+                <li class="workflow-step">
+                    <span class="step-num">5</span>
+                    <span>Testi SEO, brochure PDF, landing page — tutto generato</span>
+                </li>
+                <li class="workflow-step">
+                    <span class="step-num">6</span>
+                    <span>Pubblicazione automatica portali + campagne social ads</span>
+                </li>
+                <li class="workflow-step">
+                    <span class="step-num">7</span>
+                    <span>Lead management 24/7 via WhatsApp e Telegram</span>
+                </li>
+                <li class="workflow-step">
+                    <span class="step-num">8</span>
+                    <span>Doc intelligence: OCR, compliance check, data room digitale</span>
+                </li>
+            </ul>
+            <div class="workflow-bottom">
+                <div class="workflow-metric">
+                    <div class="val">€49</div>
+                    <div class="desc">Costo / immobile</div>
+                </div>
+                <div class="workflow-metric">
+                    <div class="val">< 24h</div>
+                    <div class="desc">Time to market</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 2rem;" data-aos="fade-up">
+        <div style="display: inline-flex; align-items: center; gap: 1rem; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); padding: 1rem 2rem; border-radius: 100px;">
+            <span style="font-size: 1.5rem; font-weight: 800; color: var(--success);">-95%</span>
+            <span style="color: var(--text-secondary); font-size: 0.9rem;">riduzione costi per immobile</span>
+            <span style="color: var(--text-muted); margin: 0 0.5rem;">|</span>
+            <span style="font-size: 1.5rem; font-weight: 800; color: var(--success);">20x</span>
+            <span style="color: var(--text-secondary); font-size: 0.9rem;">più veloce</span>
+        </div>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SECTION 5: CAPABILITIES -->
+<section>
+    <div class="section-label" data-aos="fade-up">Cosa Facciamo Già</div>
+    <h2 class="section-title" data-aos="fade-up">
+        12 servizi. Un click.<br>Zero competenze richieste.
+    </h2>
+
+    <div class="cap-grid">
+        <div class="cap-card" data-aos="fade-up" data-aos-delay="0">
+            <div class="cap-icon">📸</div>
+            <div>
+                <h4>Photo Enhancement HDR</h4>
+                <p>Decluttering, correzione luci e colori professionali</p>
+            </div>
+        </div>
+        <div class="cap-card" data-aos="fade-up" data-aos-delay="50">
+            <div class="cap-icon">🛋️</div>
+            <div>
+                <h4>Virtual Staging</h4>
+                <p>Arredo fotorealistico per spazi vuoti o da svuotare</p>
+            </div>
+        </div>
+        <div class="cap-card" data-aos="fade-up" data-aos-delay="100">
+            <div class="cap-icon">🎬</div>
+            <div>
+                <h4>Video Reel & Avatar AI</h4>
+                <p>Reel verticali per Instagram/TikTok con presenter AI</p>
+            </div>
+        </div>
+        <div class="cap-card" data-aos="fade-up" data-aos-delay="150">
+            <div class="cap-icon">🏠</div>
+            <div>
+                <h4>Virtual Tour Immersivo</h4>
+                <p>Navigazione 3D generata da semplici foto smartphone</p>
+            </div>
+        </div>
+        <div class="cap-card" data-aos="fade-up" data-aos-delay="200">
+            <div class="cap-icon">📐</div>
+            <div>
+                <h4>Planimetrie 2D/3D</h4>
+                <p>Da catastale a planimetria arredata, colorata e quotata</p>
+            </div>
+        </div>
+        <div class="cap-card" data-aos="fade-up" data-aos-delay="250">
+            <div class="cap-icon">🪑</div>
+            <div>
+                <h4>Generazione Arredo</h4>
+                <p>Prospettive diverse con stili di arredo personalizzabili</p>
+            </div>
+        </div>
+        <div class="cap-card" data-aos="fade-up" data-aos-delay="300">
+            <div class="cap-icon">🔨</div>
+            <div>
+                <h4>Piani Ristrutturazione</h4>
+                <p>Progetto di ristrutturazione con render prima/dopo</p>
+            </div>
+        </div>
+        <div class="cap-card" data-aos="fade-up" data-aos-delay="350">
+            <div class="cap-icon">💰</div>
+            <div>
+                <h4>Calcolo Costi</h4>
+                <p>Stima automatica costi di ristrutturazione dettagliata</p>
+            </div>
+        </div>
+        <div class="cap-card" data-aos="fade-up" data-aos-delay="400">
+            <div class="cap-icon">✍️</div>
+            <div>
+                <h4>Testi SEO & Annunci</h4>
+                <p>Copy ottimizzati per portali e social media</p>
+            </div>
+        </div>
+        <div class="cap-card" data-aos="fade-up" data-aos-delay="450">
+            <div class="cap-icon">📄</div>
+            <div>
+                <h4>Brochure & Landing Page</h4>
+                <p>PDF impaginati e siti dedicati per ogni immobile</p>
+            </div>
+        </div>
+        <div class="cap-card" data-aos="fade-up" data-aos-delay="500">
+            <div class="cap-icon">📣</div>
+            <div>
+                <h4>Social Ads Automation</h4>
+                <p>Campagne Meta e Google lanciate in automatico</p>
+            </div>
+        </div>
+        <div class="cap-card" data-aos="fade-up" data-aos-delay="550">
+            <div class="cap-icon">📋</div>
+            <div>
+                <h4>Doc Intelligence</h4>
+                <p>OCR 99% accuratezza su visure, APE, catastali</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SECTION 6: BIM IMMOBILIARE -->
+<section>
+    <div class="section-label" data-aos="fade-up">Il Fulcro</div>
+    <h2 class="section-title" data-aos="fade-up">
+        BIM Immobiliare:<br>il <span style="color: var(--accent)">Digital Twin</span> di ogni immobile.
+    </h2>
+    <p class="section-subtitle" data-aos="fade-up">
+        Il vero vantaggio competitivo non è nella generazione dei contenuti — è nella gestione
+        strutturata del dato immobiliare. Ogni immobile diventa un asset digitale completo,
+        dal primo contatto fino al rogito notarile.
+    </p>
+
+    <div class="bim-visual">
+        <div class="bim-flow" data-aos="fade-right">
+            <div class="bim-step">
+                <div class="num">1</div>
+                <div>
+                    <strong>Acquisizione Dati</strong>
+                    <p style="font-size: 0.8rem; color: var(--text-muted);">Catasto, visura, APE, foto, documenti — tutto centralizzato</p>
+                </div>
+            </div>
+            <div class="bim-step">
+                <div class="num">2</div>
+                <div>
+                    <strong>BIM Immobiliare</strong>
+                    <p style="font-size: 0.8rem; color: var(--text-muted);">Modello digitale dell'immobile con tutti i dati strutturati</p>
+                </div>
+            </div>
+            <div class="bim-step">
+                <div class="num">3</div>
+                <div>
+                    <strong>Valorizzazione AI</strong>
+                    <p style="font-size: 0.8rem; color: var(--text-muted);">Stima valore basata su dati reali, comparabili e trend</p>
+                </div>
+            </div>
+            <div class="bim-step">
+                <div class="num">4</div>
+                <div>
+                    <strong>Compliance & Docs</strong>
+                    <p style="font-size: 0.8rem; color: var(--text-muted);">Verifica automatica documentazione per il rogito</p>
+                </div>
+            </div>
+            <div class="bim-step">
+                <div class="num">5</div>
+                <div>
+                    <strong>Fino al Rogito</strong>
+                    <p style="font-size: 0.8rem; color: var(--text-muted);">Gestione end-to-end dell'intero processo di compravendita</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bim-info" data-aos="fade-left">
+            <h3>Perché il BIM cambia tutto</h3>
+            <p>
+                La ricerca di immobili vendibili diventa proattiva e data-driven.
+                La valorizzazione è trasparente e basata su dati reali.
+                La compliance documentale è automatica.
+            </p>
+            <p style="margin-top: 1rem;">
+                <strong style="color: var(--accent);">Non sostituiamo l'agente. Sostituiamo l'incompetenza.</strong>
+                Le agenzie continuano a fare ciò che sanno fare meglio — relazione umana,
+                appuntamenti, negoziazione. Noi gestiamo tutto il resto con precisione e velocità
+                che nessun team umano può eguagliare.
+            </p>
+        </div>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SECTION 7: TRACTION & MOAT -->
+<section>
+    <div class="section-label" data-aos="fade-up">Traction & Moat</div>
+    <h2 class="section-title" data-aos="fade-up">
+        La distribuzione è il nostro<br><span style="color: var(--accent)">vantaggio competitivo.</span>
+    </h2>
+
+    <div class="traction-grid">
+        <div class="traction-card" data-aos="fade-up" data-aos-delay="0">
+            <div class="traction-number">1.200+</div>
+            <div class="traction-label">Agenzie Attive</div>
+            <div class="traction-sub">In tutta Italia</div>
+        </div>
+        <div class="traction-card" data-aos="fade-up" data-aos-delay="100">
+            <div class="traction-number">20k+</div>
+            <div class="traction-label">Contatti GDPR</div>
+            <div class="traction-sub">Database vendita compliant</div>
+        </div>
+        <div class="traction-card" data-aos="fade-up" data-aos-delay="200">
+            <div class="traction-number">30k+</div>
+            <div class="traction-label">Immobili Processati</div>
+            <div class="traction-sub">Data flywheel in azione</div>
+        </div>
+        <div class="traction-card" data-aos="fade-up" data-aos-delay="300">
+            <div class="traction-number">250k+</div>
+            <div class="traction-label">Ore Risparmiate</div>
+            <div class="traction-sub">Per i nostri clienti</div>
+        </div>
+    </div>
+
+    <div style="margin-top: 3rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 2rem;" data-aos="fade-up">
+        <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">🔄 Data Flywheel — Il Nostro Moat Difensivo</h3>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.7;">
+            Modelli AI addestrati su <strong style="color: var(--text-primary);">50.000+ immobili europei annotati</strong>.
+            Ogni immobile processato rende l'AI più precisa. Ogni agenzia che si collega
+            arricchisce il dataset. Più la piattaforma viene usata, più diventa inattaccabile
+            dai competitor — americani o europei. Con <strong style="color: var(--text-primary);">OCR al 99% di accuratezza</strong>
+            sui documenti immobiliari italiani, abbiamo un vantaggio locale impossibile da replicare overnight.
+        </p>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SECTION 8: COMPETITOR ANALYSIS -->
+<section id="competitor">
+    <div class="section-label" data-aos="fade-up">Landscape Competitivo</div>
+    <h2 class="section-title" data-aos="fade-up">
+        Nessuno in Europa offre un OS<br>agentico end-to-end per le agenzie.
+    </h2>
+
+    <div class="comp-table-wrap" data-aos="fade-up">
+        <table class="comp-table">
+            <thead>
+                <tr>
+                    <th>Feature</th>
+                    <th class="mc">MetaCasa 🇮🇹</th>
+                    <th>Gestim / Miogest<br><small style="color: var(--text-muted);">Idealista 🇮🇹</small></th>
+                    <th>Matterport<br><small style="color: var(--text-muted);">CoStar 🇺🇸</small></th>
+                    <th>Virtual Staging AI<br><small style="color: var(--text-muted);">Tools 🇺🇸</small></th>
+                    <th>Compass<br><small style="color: var(--text-muted);">🇺🇸</small></th>
+                    <th>Breezy / Lofty<br><small style="color: var(--text-muted);">🇺🇸</small></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>OS End-to-End</td>
+                    <td class="mc check">✅ Full</td>
+                    <td class="cross">❌ CRM only</td>
+                    <td class="cross">❌ 3D only</td>
+                    <td class="cross">❌ Staging only</td>
+                    <td class="partial">⚠️ Solo US</td>
+                    <td class="partial">⚠️ Solo US</td>
+                </tr>
+                <tr>
+                    <td>Contenuti AI Generativi</td>
+                    <td class="mc check">✅ Full Suite</td>
+                    <td class="cross">❌</td>
+                    <td class="cross">❌</td>
+                    <td class="partial">⚠️ Parziale</td>
+                    <td class="cross">❌</td>
+                    <td class="partial">⚠️ Parziale</td>
+                </tr>
+                <tr>
+                    <td>Marketing Automation</td>
+                    <td class="mc check">✅</td>
+                    <td class="cross">❌</td>
+                    <td class="cross">❌</td>
+                    <td class="cross">❌</td>
+                    <td class="partial">⚠️</td>
+                    <td class="partial">⚠️</td>
+                </tr>
+                <tr>
+                    <td>Doc Intelligence & OCR</td>
+                    <td class="mc check">✅ 99%</td>
+                    <td class="cross">❌</td>
+                    <td class="cross">❌</td>
+                    <td class="cross">❌</td>
+                    <td class="cross">❌</td>
+                    <td class="cross">❌</td>
+                </tr>
+                <tr>
+                    <td>BIM Immobiliare</td>
+                    <td class="mc check">✅ Roadmap</td>
+                    <td class="cross">❌</td>
+                    <td class="partial">⚠️ Parziale</td>
+                    <td class="cross">❌</td>
+                    <td class="cross">❌</td>
+                    <td class="cross">❌</td>
+                </tr>
+                <tr>
+                    <td>Compliance EU / GDPR</td>
+                    <td class="mc check">✅ Nativo</td>
+                    <td class="check">✅</td>
+                    <td class="cross">❌</td>
+                    <td class="cross">❌</td>
+                    <td class="cross">❌</td>
+                    <td class="cross">❌</td>
+                </tr>
+                <tr>
+                    <td>Prezzo / Immobile</td>
+                    <td class="mc" style="color: var(--success); font-weight: 700;">Da €49</td>
+                    <td>€50-100/mese</td>
+                    <td>€350+/tour</td>
+                    <td>$24/stanza</td>
+                    <td>N/A</td>
+                    <td>N/A</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="comp-cards" data-aos="fade-up">
+        <div class="comp-card">
+            <h4>Gestim / Miogest <span class="tag-small">Idealista</span></h4>
+            <p>CRM legacy acquisiti da Idealista nel 2020. 18k utenti ma piattaforma stagnante, zero AI, portale-first. Non un OS per l'agenzia.</p>
+        </div>
+        <div class="comp-card">
+            <h4>Matterport <span class="tag-small">CoStar — $1.6B</span></h4>
+            <p>Solo 3D e virtual tour. €350+ per singolo tour. Nessuna suite marketing, nessun workflow, nessuna automazione operativa.</p>
+        </div>
+        <div class="comp-card">
+            <h4>Virtual Staging Tools <span class="tag-small">US-based</span></h4>
+            <p>ReimagineHome, Collov, Stager AI — point solutions isolate. Nessuna integrazione con il workflow dell'agenzia. Un pezzo del puzzle, non la soluzione.</p>
+        </div>
+        <div class="comp-card">
+            <h4>Compass / Breezy / Lofty <span class="tag-small">Solo USA</span></h4>
+            <p>OS concept simile al nostro, ma zero presenza in Europa. No compliance GDPR, no portali italiani, no documenti EU. Non arriveranno qui per anni.</p>
+        </div>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SECTION 9: AUTOMAZIONE INTERNA -->
+<section>
+    <div class="section-label" data-aos="fade-up">Scalabilità</div>
+    <h2 class="section-title" data-aos="fade-up">
+        Automazione interna al 70%.<br>Margini che scalano.
+    </h2>
+
+    <div class="auto-visual">
+        <div class="auto-ring" data-aos="fade-right">
+            <div class="ring-val">70%</div>
+            <div class="ring-label">Automatizzato</div>
+        </div>
+
+        <div class="auto-benefits" data-aos="fade-left">
+            <div class="auto-benefit">
+                <div class="ab-icon">🤖</div>
+                <div>
+                    <h4>Approccio Agentico Interno</h4>
+                    <p>Non solo per i clienti: anche i processi interni di MetaCasa sono gestiti da agenti AI. Dal customer success alla quality assurance.</p>
+                </div>
+            </div>
+            <div class="auto-benefit">
+                <div class="ab-icon">📉</div>
+                <div>
+                    <h4>Costi Marginali → Zero</h4>
+                    <p>Ogni nuovo cliente ha un costo marginale tendente a zero. Gross margin 90%+ con struttura AI-based.</p>
+                </div>
+            </div>
+            <div class="auto-benefit">
+                <div class="ab-icon">🚀</div>
+                <div>
+                    <h4>Da 1.200 a 10.000 Agenzie</h4>
+                    <p>Scalare senza aumentare proporzionalmente l'headcount. L'AI gestisce il volume, il team gestisce la strategia.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SECTION 10: NUMERI & BUSINESS MODEL -->
+<section id="numeri">
+    <div class="section-label" data-aos="fade-up">Unit Economics</div>
+    <h2 class="section-title" data-aos="fade-up">
+        Metriche SaaS<br><span style="color: var(--accent)">best-in-class.</span>
+    </h2>
+
+    <div class="ue-grid">
+        <div class="ue-card" data-aos="fade-up" data-aos-delay="0">
+            <div class="ue-val">€1.5k</div>
+            <div class="ue-info">
+                <h4>ARPU Annuale</h4>
+                <p>Ricavo medio per agenzia all'anno — in crescita con upselling</p>
+            </div>
+        </div>
+        <div class="ue-card" data-aos="fade-up" data-aos-delay="100">
+            <div class="ue-val">€20-40</div>
+            <div class="ue-info">
+                <h4>CAC Blended</h4>
+                <p>Costo acquisizione bassissimo. Payback period inferiore a 1 mese</p>
+            </div>
+        </div>
+        <div class="ue-card" data-aos="fade-up" data-aos-delay="200">
+            <div class="ue-val">90%+</div>
+            <div class="ue-info">
+                <h4>Gross Margin</h4>
+                <p>Struttura costi AI-based con costi marginali tendenti a zero</p>
+            </div>
+        </div>
+        <div class="ue-card" data-aos="fade-up" data-aos-delay="300">
+            <div class="ue-val">>10x</div>
+            <div class="ue-info">
+                <h4>LTV / CAC Ratio</h4>
+                <p>Estrema efficienza nell'acquisizione. Unit economics profittevoli dal giorno 1</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pricing -->
+    <h3 style="font-size: 1.3rem; font-weight: 700; margin-top: 4rem; margin-bottom: 0.5rem;" data-aos="fade-up">Pricing Flessibile</h3>
+    <p style="color: var(--text-secondary); margin-bottom: 2rem;" data-aos="fade-up">Dal SaaS ricorrente al pay-per-use. Zero barriere d'ingresso.</p>
+
+    <div class="pricing-grid" data-aos="fade-up">
+        <div class="price-card">
+            <div class="price-name">Starter</div>
+            <div class="price-amount">€29<span>/mese</span></div>
+            <div class="price-desc">Single Agent</div>
+            <ul class="price-features">
+                <li>Accesso base AI</li>
+                <li>Photo enhancement</li>
+                <li>Virtual staging</li>
+                <li>Planimetrie 2D</li>
+            </ul>
+        </div>
+        <div class="price-card featured">
+            <div class="price-name">Pro</div>
+            <div class="price-amount">€79<span>/mese</span></div>
+            <div class="price-desc">Piccole Agenzie</div>
+            <ul class="price-features">
+                <li>Suite AI completa</li>
+                <li>Video reel + avatar</li>
+                <li>Social ads automation</li>
+                <li>Planimetrie 3D</li>
+                <li>WhatsApp Agent 24/7</li>
+            </ul>
+        </div>
+        <div class="price-card">
+            <div class="price-name">Agency</div>
+            <div class="price-amount">€199<span>/mese</span></div>
+            <div class="price-desc">Team 5+ agenti</div>
+            <ul class="price-features">
+                <li>Multi-seat & Admin</li>
+                <li>Agentic Features</li>
+                <li>Doc Intelligence</li>
+                <li>Reporting avanzato</li>
+                <li>Priority support</li>
+            </ul>
+        </div>
+        <div class="price-card">
+            <div class="price-name">Enterprise</div>
+            <div class="price-amount">Custom</div>
+            <div class="price-desc">Franchising & Network</div>
+            <ul class="price-features">
+                <li>API Integration</li>
+                <li>SLA dedicato</li>
+                <li>White-label option</li>
+                <li>Onboarding dedicato</li>
+                <li>Custom AI training</li>
+            </ul>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 2rem; padding: 1rem; background: var(--bg-card); border-radius: 12px; border: 1px solid var(--border);" data-aos="fade-up">
+        <p style="font-size: 0.9rem; color: var(--text-secondary);">
+            <strong style="color: var(--accent);">Pay-per-Use:</strong>
+            Pacchetti "chiavi in mano" da €49/immobile — Listing Pack (€49) | Full Agency (€149) | Premium (€299)
+        </p>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SECTION 11: MARKET SIZE -->
+<section>
+    <div class="section-label" data-aos="fade-up">Opportunità di Mercato</div>
+    <h2 class="section-title" data-aos="fade-up">
+        Un mercato da €100B+.<br>Focus Europa, partendo dall'Italia.
+    </h2>
+
+    <div class="tam-visual">
+        <div class="tam-circles" data-aos="fade-right">
+            <div class="tam-circle tam">
+                <div class="circle-val">€100B+</div>
+                <div class="circle-label">TAM Global</div>
+            </div>
+            <div class="tam-circle sam">
+                <div class="circle-val">€1.5B</div>
+                <div class="circle-label">SAM Europa</div>
+            </div>
+            <div class="tam-circle som">
+                <div class="circle-val">€50M</div>
+                <div class="circle-label">SOM Italia</div>
+            </div>
+        </div>
+
+        <div class="tam-details" data-aos="fade-left">
+            <div class="tam-item">
+                <h4>🇮🇹 Italia — Focus Attuale</h4>
+                <p>15.200 agenzie, 45.000+ professionisti, 750k+ transazioni/anno. Target: 10% penetrazione.</p>
+            </div>
+            <div class="tam-item">
+                <h4>🇪🇺 Europa — Espansione 2027-2028</h4>
+                <p>3.5M transazioni/anno. Spagna, Francia e Germania — mercati frammentati simili all'Italia.</p>
+            </div>
+            <div class="tam-item">
+                <h4>🌍 Global — Visione Long-term</h4>
+                <p>Mercato software RE in crescita trainata dall'AI. PropTech EU: $50.7B entro 2033 (CAGR 18.75%).</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SECTION 12: ROADMAP -->
+<section>
+    <div class="section-label" data-aos="fade-up">Roadmap</div>
+    <h2 class="section-title" data-aos="fade-up">
+        Da €1M a €50M ARR.<br>In 4 anni.
+    </h2>
+
+    <div class="roadmap">
+        <div class="road-card" data-aos="fade-up" data-aos-delay="0">
+            <div class="road-year">2026</div>
+            <div class="road-arr">€1M</div>
+            <ul>
+                <li>Scale-up Italia</li>
+                <li>Agentic Video Suite</li>
+                <li>Voice & WhatsApp AI</li>
+                <li>Seed Round Close</li>
+            </ul>
+        </div>
+        <div class="road-card" data-aos="fade-up" data-aos-delay="100">
+            <div class="road-year">2027</div>
+            <div class="road-arr">€8M</div>
+            <ul>
+                <li>Espansione Spagna & Francia</li>
+                <li>Full Doc-Intelligence</li>
+                <li>Serie A Funding</li>
+                <li>BIM v1 Launch</li>
+            </ul>
+        </div>
+        <div class="road-card" data-aos="fade-up" data-aos-delay="200">
+            <div class="road-year">2028</div>
+            <div class="road-arr">€25M</div>
+            <ul>
+                <li>Espansione Germania</li>
+                <li>Standard BIM Immobiliare</li>
+                <li>Autonomous Broker Agents</li>
+                <li>Market Leadership EU</li>
+            </ul>
+        </div>
+        <div class="road-card" data-aos="fade-up" data-aos-delay="300">
+            <div class="road-year">2029</div>
+            <div class="road-arr">€50M</div>
+            <ul>
+                <li>Market Leadership EU</li>
+                <li>Ecosystem Integration</li>
+                <li>Exit Ready / IPO Path</li>
+                <li>CAGR ~160%</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SECTION 13: TEAM -->
+<section id="team">
+    <div class="section-label" data-aos="fade-up">Il Team</div>
+    <h2 class="section-title" data-aos="fade-up">
+        Real Estate + AI + Operations.<br>Il mix che mancava.
+    </h2>
+
+    <div class="team-grid">
+        <div class="team-card" data-aos="fade-up" data-aos-delay="0">
+            <div class="team-avatar">SG</div>
+            <h3>Sacha Gentili</h3>
+            <div class="role">CEO & Founder</div>
+            <p>Ex-Manager PropTech con 10+ anni nel Real Estate. Visionario del prodotto e sales leader.</p>
+        </div>
+        <div class="team-card" data-aos="fade-up" data-aos-delay="100">
+            <div class="team-avatar">JR</div>
+            <h3>Juxhim Radhima</h3>
+            <div class="role">CTO & Co-Founder</div>
+            <p>Senior AI Engineer specializzato in LLM e Agentic Workflows. Architetto della piattaforma.</p>
+        </div>
+        <div class="team-card" data-aos="fade-up" data-aos-delay="200">
+            <div class="team-avatar">DS</div>
+            <h3>Daniele Scaglia</h3>
+            <div class="role">COO & Co-Founder</div>
+            <p>Esperto di processi B2B e Operations. Ha scalato team operativi da 0 a 50 persone.</p>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 2rem;" data-aos="fade-up">
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">Advisory Board</p>
+        <div class="advisors">
+            <div class="advisor">
+                <div class="adv-avatar">EZ</div>
+                <div class="adv-name">Edoardo Zita</div>
+                <div class="adv-role">Strategy Advisor</div>
+            </div>
+            <div class="advisor">
+                <div class="adv-avatar">FM</div>
+                <div class="adv-name">Francesco Meani</div>
+                <div class="adv-role">Tech Advisor</div>
+            </div>
+            <div class="advisor">
+                <div class="adv-avatar">MC</div>
+                <div class="adv-name">Marco Caradonna</div>
+                <div class="adv-role">Growth Advisor</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SECTION 14: THE ASK -->
+<section class="ask-section" id="ask">
+    <div class="ask-content">
+        <div class="section-label" data-aos="fade-up">Investment Opportunity</div>
+        <h2 class="section-title" data-aos="fade-up" style="margin: 0 auto 1rem;">
+            Ridefinisci con noi il Real Estate<br>europeo.
+        </h2>
+        <p class="section-subtitle" style="margin: 0 auto;" data-aos="fade-up">
+            Seed Round aperto. Entra nel sistema operativo che cambierà il modo
+            in cui 15.000+ agenzie lavorano ogni giorno.
+        </p>
+
+        <div class="ask-grid" data-aos="fade-up">
+            <div class="ask-item">
+                <div class="ask-val">€1.5M</div>
+                <div class="ask-label">Seed Round</div>
+            </div>
+            <div class="ask-item">
+                <div class="ask-val">€8.5M</div>
+                <div class="ask-label">Pre-Money</div>
+            </div>
+            <div class="ask-item">
+                <div class="ask-val">Q3 2026</div>
+                <div class="ask-label">Target Close</div>
+            </div>
+            <div class="ask-item">
+                <div class="ask-val">3x YoY</div>
+                <div class="ask-label">Crescita</div>
+            </div>
+        </div>
+
+        <div class="fund-bars" data-aos="fade-up">
+            <div class="fund-bar">
+                <span class="dot" style="background: var(--accent);"></span>
+                <span>40% Prodotto & R&D</span>
+            </div>
+            <div class="fund-bar">
+                <span class="dot" style="background: #3b82f6;"></span>
+                <span>30% Sales & Marketing</span>
+            </div>
+            <div class="fund-bar">
+                <span class="dot" style="background: #8b5cf6;"></span>
+                <span>20% Ops & CS</span>
+            </div>
+            <div class="fund-bar">
+                <span class="dot" style="background: #6b7280;"></span>
+                <span>10% Legal & GDPR</span>
+            </div>
+        </div>
+
+        <a href="mailto:invest@metacasa.ai" class="final-cta" data-aos="fade-up">
+            Parliamone → invest@metacasa.ai
+        </a>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <p>MetaCasa &copy; 2026 — Il Sistema Operativo per il Real Estate.</p>
+    <p style="margin-top: 0.5rem;"><a href="https://metacasa.ai">metacasa.ai</a></p>
+</footer>
+
+<!-- AOS Animation Library -->
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+<script>
+    AOS.init({
+        duration: 600,
+        once: true,
+        offset: 50,
+        disable: window.innerWidth < 768
+    });
+    // Trigger initial animations after short delay
+    setTimeout(() => { window.dispatchEvent(new Event('scroll')); }, 100);
+</script>
+
+</body>
+</html>
